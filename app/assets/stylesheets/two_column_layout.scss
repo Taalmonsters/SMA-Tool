@@ -1,0 +1,25 @@
+div.container-fluid {
+	height: 100%;
+	#left {
+    background: #CECECE;
+    border-right: 1px solid #999;
+		height: calc( 100% - 51px );
+		position: absolute;
+	    top: 51px;
+	    bottom: 0;
+	    left: 0;
+		overflow: hidden;
+		#footer {
+			position: absolute;
+			bottom: 0;
+		}
+	}
+	#right {
+		height: calc( 100% - 51px );
+		position: absolute;
+	    top: 51px;
+	    bottom: 0;
+	    right: 0;
+		overflow-y: auto;
+	}
+}
