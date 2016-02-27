@@ -5,11 +5,118 @@
  * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
  * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
  *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any styles
- * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
- * file per style scope.
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
  *
- *= require_tree .
  *= require_self
- */
+ *= require_tree .
+*/
+
+// .content {
+  // background-color: #eee;
+  // padding: 20px;
+  // margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+  // -webkit-border-radius: 0 0 6px 6px;
+  // -moz-border-radius: 0 0 6px 6px;
+  // border-radius: 0 0 6px 6px;
+  // -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  // -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  // box-shadow: 0 1px 2px rgba(0,0,0,.15);
+// }
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+// generic transform
+@mixin transform($transforms) {
+     -moz-transform: $transforms;
+       -o-transform: $transforms;
+      -ms-transform: $transforms;
+  -webkit-transform: $transforms;
+          transform: $transforms;
+}
+// rotate
+@mixin rotate ($deg) {
+  @include transform(rotate(#{$deg}deg));
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  font-family: 'Roboto Slab', sans-serif;
+  main {
+    height: calc( 100% - 51px );
+    overflow-y: auto;
+    padding-bottom: 0 !important;
+  }
+  #banner {
+    position: absolute;
+    bottom: 15px;
+    right: -40px;
+    background-color: #DE4D60;
+    color: #FFF;
+    font-size: medium;
+    font-weight: bold;
+    @include rotate(-45);
+    padding: 10px 50px;
+    z-index: 1000;
+    font-family: 'Open Sans', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Open Sans', sans-serif;
+  }
+}
+
+nav.navbar {
+  margin-bottom: 0;
+  box-shadow: 0 0 1px #555;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  a.navbar-brand {
+    font-weight: 500;
+    font-size: large;
+    margin-left: 0px !important;
+    color: #FFF;
+  }
+  a.navbar-img {
+    padding: 5px;
+    img.mini-logo {
+      height: 40px;
+      width: auto;
+      display: inline-block;
+      margin-left: 15px;
+    }
+  }
+}
+
+form.form-inline div.form-group {
+  margin-right: 20px;
+  margin-bottom: 30px;
+}
+
+div.nav-left {
+  width: 100%;
+  padding: 10px 10px;
+  padding-top: 15px;
+  // background: #AAA;
+  > a {
+    color: #6FE7E9;
+    display: block;
+    margin-bottom: 10px;
+    text-decoration: none;
+  }
+  > button {
+    display: block;
+    margin-bottom: 10px;
+    width: 100%;
+    > a {
+      text-decoration: none;
+      color: #FFF;
+    }
+  }
+}
