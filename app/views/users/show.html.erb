@@ -7,12 +7,16 @@
 		</div>
 	</div>
 	<div id="right-xs" class="col-xs-12 visible-xs">
-		<h1 class="page-header">Users - Show</h1>
+		<h1 class="page-header">Users - Show</h1>    <p>Name: <%= @user.name if @user.name %></p>
+    <p>Email: <%= @user.email if @user.email %></p>
+
 		<div id="footer" class="visible-xs">
 			<%= render 'layouts/copyright' %>
 		</div>
 	</div>
 	<div id="right" class="col-sm-10 visible-sm visible-md visible-lg">
-		<h1 class="page-header">Users - Show</h1>
+		<h1 class="page-header">Users - Show</h1>    <p>Name: <%= @user.name if @user.name %></p>
+    <p>Email: <%= @user.email if @user.email %></p>
+
 	</div>
 </div>
