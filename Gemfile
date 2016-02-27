@@ -19,6 +19,7 @@ gem 'bootstrap-sass'
 gem 'high_voltage'
 gem 'omniauth'
 gem 'omniauth-facebook'
+gem "koala", "2.2.0rc3"
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]

@@ -1,10 +1,16 @@
 require 'open-uri'
 class TwitterSearch < ActiveRecord::Base
-  enum status: [:running, :finished]
+  enum status: [:waiting, :running, :finished]
+  after_initialize :set_default_status, :if => :new_record?
   belongs_to :user
   has_and_belongs_to_many :tweets
+
+  def set_default_status
+    self.status ||= :waiting
+  end
   
   def get_tweets
+    self.update_attribute(:status, :running)
     p "*** GET TWEETS"
     Thread.new do
       tw_auth = TwitterAuth.where(:user_id => self.user_id).first
@@ -23,6 +29,7 @@ class TwitterSearch < ActiveRecord::Base
         end
         sleep(5)
       end
+      self.update_attribute(:status, :finished)
     end
   end
   

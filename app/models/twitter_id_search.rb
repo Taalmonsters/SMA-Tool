@@ -1,9 +1,15 @@
 class TwitterIdSearch < ActiveRecord::Base
-  enum status: [:running, :finished]
+  enum status: [:waiting, :running, :finished]
+  after_initialize :set_default_status, :if => :new_record?
   belongs_to :user
   has_and_belongs_to_many :tweets
+
+  def set_default_status
+    self.status ||= :waiting
+  end
   
   def get_tweets
+    self.update_attribute(:status, :running)
     tw_auth = TwitterAuth.where(:user_id => self.user_id).first
     access_token = prepare_access_token(tw_auth.consumer_key, tw_auth.consumer_secret, tw_auth.access_token, tw_auth.access_secret)
     url = "https://api.twitter.com/1.1/statuses/lookup.json?id="+self.query.gsub(/[\n ]+/,"")
@@ -15,6 +21,7 @@ class TwitterIdSearch < ActiveRecord::Base
         self.tweets << tweet
       end
     end
+    self.update_attribute(:status, :finished)
   end
   
   def prepare_access_token(consumer_key, consumer_secret, oauth_token, oauth_token_secret)

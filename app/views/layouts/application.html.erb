@@ -37,7 +37,7 @@
 					<%= yield %>
 					<% else %>
 					<p>
-						Please <a href="/users/sign_in">sign in</a> or <a href="/users/sign_up">sign up</a>.
+						Please <a href="/sign_in">sign in</a>.
 					</p>
 					<% end %>
 					<div id="footer" class="visible-xs">
@@ -53,7 +53,7 @@
 					<%= yield %>
 					<% else %>
 					<p>
-						Please <a href="/users/sign_in">sign in</a> or <a href="/users/sign_up">sign up</a>.
+						Please <%= link_to 'sign in', signin_path %>.
 					</p>
 					<% end %>
 				</div>
