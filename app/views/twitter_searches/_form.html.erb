@@ -1,0 +1,28 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<%= form_for(@twitter_search, :url => user_twitter_searches_path) do |f| %>
+		<% if @twitter_search.errors.any? %>
+		<div id="error_explanation">
+			<h2><%= pluralize(@twitter_search.errors.count, "error") %> prohibited this twitter_search from being saved:</h2>
+
+			<ul>
+				<% @twitter_search.errors.full_messages.each do |message| %>
+				<li>
+					<%= message %>
+				</li>
+				<% end %>
+			</ul>
+		</div>
+		<% end %>
+
+		<div class="form-group">
+			<%= f.label :query %>
+			<%= f.text_field :query, class: 'form-control' %>
+		</div>
+
+		<div class="actions">
+			<%= f.submit %>
+		</div>
+		<% end %>
+	</div>
+</div>

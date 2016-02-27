@@ -1,8 +1,17 @@
 Rails.application.routes.draw do
-  resources :users
+
   root to: 'visitors#index'
   get '/auth/:provider/callback' => 'sessions#create'
   get '/signin' => 'sessions#new', :as => :signin
   get '/signout' => 'sessions#destroy', :as => :signout
   get '/auth/failure' => 'sessions#failure'
+  
+  resources :users do
+    resources :twitter_streams
+    resources :twitter_searches
+    resources :twitter_id_searches
+    resources :facebook_searches
+  end
+  
+  post '/users/:user_id/twitter_streams/:id/stop' => 'twitter_streams#stop'
 end

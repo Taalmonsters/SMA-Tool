@@ -1,0 +1,24 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>User</th>
+			<th>Location</th>
+			<th>Created at</th>
+			<th style="max-width: 400px;">Text</th>
+			<th>RT</th>
+			<th>FAV</th>
+		</tr>
+	</thead>
+	<tbody>
+	<% @tweets.each do |tweet| %>
+		<tr>
+			<td><%= tweet.user_screen_name %></td>
+			<td><%= tweet.user_location %></td>
+			<td><%= tweet.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+			<td style="max-width: 400px;"><%= tweet.text %></td>
+			<td><%= tweet.retweet_count %></td>
+			<td><%= tweet.favorite_count %></td>
+		</tr>
+	<% end %>
+	</tbody>
+</table>

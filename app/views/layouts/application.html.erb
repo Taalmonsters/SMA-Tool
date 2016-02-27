@@ -1,20 +1,63 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>De Taalmonsters - <%= content_for?(:title) ? yield(:title) : "Sma Tool Fb" %></title>
-    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Sma Tool Fb" %>">
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-    <%= csrf_meta_tags %>
-  </head>
-  <body>
-    <header>
-      <%= render 'layouts/navigation' %>
-    </header>
-    <main role="main">
-       <%= render 'layouts/messages' %>
-       <%= yield %>
-    </main>
-  </body>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>De Taalmonsters - <%= content_for?(:title) ? yield(:title) : "SMA Tool" %></title>
+		<meta name="description" content="<%= content_for?(:description) ? yield(:description) : "SMA Tool" %>">
+		<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+		<%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+		<%= csrf_meta_tags %>
+	</head>
+	<body>
+		<header>
+			<%= render 'layouts/navigation' %>
+		</header>
+		<main role="main">
+			<div class="container-fluid">
+
+				<div id="left-xs" class="col-xs-12 visible-xs">
+					<% if @user && !@page_title.blank? %>
+					<%= render 'layouts/menu' %>
+					<% end %>
+				</div>
+				<div id="left" class="col-sm-2 visible-sm visible-md visible-lg">
+					<% if @user && !@page_title.blank? %>
+					<%= render 'layouts/menu' %>
+					<% end %>
+					<div id="footer">
+						<%= render 'layouts/copyright' %>
+					</div>
+				</div>
+				<div id="right-xs" class="col-xs-12 visible-xs">
+					<%= render 'layouts/messages' %>
+					<% if @page_title %>
+					<h1 class="page-header"><%= @sub_title ? @sub_title.titleize : @page_title.titleize %></h1>
+					<% end %>
+					<% if @user || !@page_title %>
+					<%= yield %>
+					<% else %>
+					<p>
+						Please <a href="/users/sign_in">sign in</a> or <a href="/users/sign_up">sign up</a>.
+					</p>
+					<% end %>
+					<div id="footer" class="visible-xs">
+						<%= render 'layouts/copyright' %>
+					</div>
+				</div>
+				<div id="right" class="col-sm-10 visible-sm visible-md visible-lg">
+					<%= render 'layouts/messages' %>
+					<% if @page_title %>
+					<h1 class="page-header"><%= @sub_title ? @sub_title.titleize : @page_title.titleize %></h1>
+					<% end %>
+					<% if @user || !@page_title %>
+					<%= yield %>
+					<% else %>
+					<p>
+						Please <a href="/users/sign_in">sign in</a> or <a href="/users/sign_up">sign up</a>.
+					</p>
+					<% end %>
+				</div>
+			</div>
+		</main>
+	</body>
 </html>

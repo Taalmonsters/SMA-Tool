@@ -1,0 +1,24 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>User</th>
+			<th>Location</th>
+			<th>Created at</th>
+			<th style="max-width: 400px;">Text</th>
+			<th>Shares</th>
+			<th>Likes</th>
+		</tr>
+	</thead>
+	<tbody>
+	<% @facebook_statuses.each do |facebook_status| %>
+		<tr>
+			<td><%= facebook_status.user_screen_name %></td>
+			<td><%= facebook_status.user_location %></td>
+			<td><%= facebook_status.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+			<td style="max-width: 400px;"><%= facebook_status.text %></td>
+			<td><%= facebook_status.share_count %></td>
+			<td><%= facebook_status.like_count %></td>
+		</tr>
+	<% end %>
+	</tbody>
+</table>

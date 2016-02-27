@@ -15,3 +15,43 @@
 //= require turbolinks
 //= require bootstrap-sprockets
 //= require_tree .
+
+var ready;
+
+ready = function() {
+};
+
+$(document).ready(ready);
+$(document).on('page:load', ready);
+
+
+$(document).on('click', '#stop-stream', function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+	var id = $('#stop-stream').data('id');
+	var stream_id = $('#stop-stream').data('stream-id');
+	callServer('/users/'+id+'/twitter_streams/'+stream_id+'/stop', 'POST', {}, null, null);
+});
+
+
+function callServer(url, method, params, target, callback) {
+	
+	$.ajax({
+        url: url, // Route to the Script Controller method
+       type: method,
+   dataType: "json",
+       data: params, // This goes to Controller in params hash, i.e. params[:file_name]
+   complete: function() {
+	   			if(callback != null)
+	   				callback();
+   			 },
+    success: function(data, textStatus, xhr) {
+    			if (target != null)
+    				$(target).html(data.html);
+             },
+      error: function() {
+    	  		if (target != null)
+    	  			$(target).html("Ajax error!");
+             }
+	});
+}

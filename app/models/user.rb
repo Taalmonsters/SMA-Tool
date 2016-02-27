@@ -1,6 +1,12 @@
 class User < ActiveRecord::Base
   enum role: [:user, :vip, :admin]
   after_initialize :set_default_role, :if => :new_record?
+  has_one :twitter_auth
+  has_many :twitter_streams
+  has_many :twitter_searches
+  has_many :twitter_id_searches
+  has_many :facebook_searches
+  accepts_nested_attributes_for :twitter_auth, allow_destroy: true
 
   def set_default_role
     if User.count == 0

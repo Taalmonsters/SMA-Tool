@@ -1,0 +1,18 @@
+<div class="row">
+	<div class="col-xs-12">
+	    <ul class="list-unstyled">
+	    	<li><label>Query</label> <%= @twitter_id_search.query %></li>
+	    	<li><label>Tweet count</label> <span id="tweet-count"><%= @twitter_id_search.tweets.size %></span></li>
+	    	<% if @twitter_id_search.tweets.size > 0 %>
+	    	<li><label></label> <a href="/users/<%= @user.id %>/twitter_id_searches/<%= @twitter_id_search.id %>.csv" target="_blank" class="btn-xs btn-info">Download tweets</a></li>
+	    	<% end %>
+	    </ul>
+	</div>
+</div>
+<%= link_to 'Back to Twitter ID Searches', user_twitter_id_searches_path %>
+<div class="row">
+	<div id="tweets" class="col-xs-12">
+		<%= render 'tweets/full_index' %>
+	</div>
+</div>
+<br>

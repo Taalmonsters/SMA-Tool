@@ -11,7 +11,115 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160227150133) do
+ActiveRecord::Schema.define(version: 20160227154059) do
+
+  create_table "facebook_searches", force: :cascade do |t|
+    t.string   "query"
+    t.integer  "status"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "facebook_searches", ["user_id"], name: "index_facebook_searches_on_user_id"
+
+  create_table "facebook_searches_statuses", id: false, force: :cascade do |t|
+    t.integer "facebook_status_id", null: false
+    t.integer "facebook_search_id", null: false
+  end
+
+  create_table "facebook_statuses", force: :cascade do |t|
+    t.string   "id_str"
+    t.string   "text"
+    t.string   "user_screen_name"
+    t.string   "user_location"
+    t.integer  "share_count"
+    t.integer  "like_count"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  create_table "hashtags", force: :cascade do |t|
+    t.string   "tag"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "hashtags_tweets", id: false, force: :cascade do |t|
+    t.integer "tweet_id",   null: false
+    t.integer "hashtag_id", null: false
+  end
+
+  create_table "tweets", force: :cascade do |t|
+    t.string   "id_str"
+    t.string   "text"
+    t.string   "lang"
+    t.string   "in_reply_to_status_id_str"
+    t.string   "user_screen_name"
+    t.string   "user_location"
+    t.integer  "retweet_count"
+    t.integer  "favorite_count"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  create_table "tweets_twitter_id_searches", id: false, force: :cascade do |t|
+    t.integer "tweet_id",             null: false
+    t.integer "twitter_id_search_id", null: false
+  end
+
+  create_table "tweets_twitter_searches", id: false, force: :cascade do |t|
+    t.integer "tweet_id",          null: false
+    t.integer "twitter_search_id", null: false
+  end
+
+  create_table "tweets_twitter_streams", id: false, force: :cascade do |t|
+    t.integer "tweet_id",          null: false
+    t.integer "twitter_stream_id", null: false
+  end
+
+  create_table "twitter_auths", force: :cascade do |t|
+    t.string   "consumer_key"
+    t.string   "consumer_secret"
+    t.string   "access_token"
+    t.string   "access_secret"
+    t.integer  "user_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "twitter_auths", ["user_id"], name: "index_twitter_auths_on_user_id"
+
+  create_table "twitter_id_searches", force: :cascade do |t|
+    t.text     "query"
+    t.integer  "status"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "twitter_id_searches", ["user_id"], name: "index_twitter_id_searches_on_user_id"
+
+  create_table "twitter_searches", force: :cascade do |t|
+    t.string   "query"
+    t.integer  "status"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "twitter_searches", ["user_id"], name: "index_twitter_searches_on_user_id"
+
+  create_table "twitter_streams", force: :cascade do |t|
+    t.string   "query"
+    t.integer  "period"
+    t.integer  "status"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "twitter_streams", ["user_id"], name: "index_twitter_streams_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "name"

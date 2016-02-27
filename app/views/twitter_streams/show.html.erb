@@ -1,0 +1,27 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+	    <ul class="list-unstyled">
+	    	<li><label>Query</label> <%= @twitter_stream.query %></li>
+	    	<li><label>Period (days)</label> <%= @twitter_stream.period %></li>
+	    	<li><label>Status</label> <span id="status" data-status="<%= @twitter_stream.is_expired ? 1 : 0 %>"><%= @twitter_stream.is_expired ? 'Finished' : 'Running (Expires at: '+@twitter_stream.expiration_date.to_s+')' %></span></li>
+	    	<% if !@twitter_stream.is_expired %>
+	    	<li class="hidden"><label></label> <button id="stop-stream" data-id="<%= @user.id %>" data-stream-id="<%= @twitter_stream.id %>" class="btn-xs btn-warning">Stop stream</button></li>
+	    	<% end %>
+	    </ul>
+	</div>
+	<div class="col-xs-12 col-sm-6">
+	    <ul class="list-unstyled">
+	    	<li><label>Tweet count</label> <span id="tweet-count"><%= @twitter_stream.tweets.size %></span></li>
+	    	<% if @twitter_stream.tweets.size > 0 %>
+	    	<li><label></label> <a href="/users/<%= @user.id %>/twitter_streams/<%= @twitter_stream.id %>.csv" target="_blank" class="btn-xs btn-info">Download tweets</a></li>
+	    	<% end %>
+	    </ul>
+	</div>
+</div>
+<%= link_to 'Back to Tweet Streams', user_twitter_streams_path %>
+<div class="row">
+	<div id="tweets" class="col-xs-12">
+		<%= render 'tweets/index' %>
+	</div>
+</div>
+<br>

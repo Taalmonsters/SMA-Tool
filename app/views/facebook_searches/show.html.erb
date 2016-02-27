@@ -1,0 +1,18 @@
+<div class="row">
+	<div class="col-xs-12">
+	    <ul class="list-unstyled">
+	    	<li><label>Query</label> <%= @facebook_search.query %></li>
+	    	<li><label>Status count</label> <span id="tweet-count"><%= @facebook_search.facebook_statuses.size %></span></li>
+	    	<% if @facebook_search.facebook_statuses.size > 0 %>
+	    	<li><label></label> <a href="/users/<%= @user.id %>/facebook_searches/<%= @facebook_search.id %>.csv" target="_blank" class="btn-xs btn-info">Download Facebook statuses</a></li>
+	    	<% end %>
+	    </ul>
+	</div>
+</div>
+<%= link_to 'Back to Facebook Searches', user_facebook_searches_path %>
+<div class="row">
+	<div id="facebook-statuses" class="col-xs-12">
+		<%= render 'facebook_statuses/index' %>
+	</div>
+</div>
+<br>
