@@ -1,36 +1,16 @@
-<div class="container-fluid">
-	<div id="left-xs" class="col-xs-12 visible-xs">
-	</div>
-	<div id="left" class="col-sm-2 visible-sm visible-md visible-lg">
-		<div id="footer">
-			<%= render 'layouts/copyright' %>
-		</div>
-	</div>
-	<div id="right-xs" class="col-xs-12 visible-xs">
-		<h1 class="page-header">Users - Index</h1>    <table class="table">
-    <tbody>
-      <% @users.each do |user| %>
-        <tr>
-          <%= render user %>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-
-		<div id="footer" class="visible-xs">
-			<%= render 'layouts/copyright' %>
-		</div>
-	</div>
-	<div id="right" class="col-sm-10 visible-sm visible-md visible-lg">
-		<h1 class="page-header">Users - Index</h1>    <table class="table">
-    <tbody>
-      <% @users.each do |user| %>
-        <tr>
-          <%= render user %>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-
+<h1 class="page-header">Users</h1>
+<div class="row">
+	<div class="col-xs-12">
+		<table class="table table-striped">
+		    <tbody>
+		      <% @users.each do |user| %>
+		        <tr>
+		          <%= render user %>
+		        </tr>
+		      <% end %>
+		    </tbody>
+		</table>
+		<br>
+		<%= link_to 'Back', :back %>
 	</div>
 </div>
