@@ -1,4 +1,6 @@
 <% if user_signed_in? %>
+	<li><a>Signed in as <b><%= current_user.name %></b></a></li>
+	<li><%= link_to 'Edit profile', edit_user_path(:id => current_user.id) %></li>
   <li><%= link_to 'Sign out', signout_path %></li>
 <% else %>
   <li><%= link_to 'Sign in', signin_path %></li>

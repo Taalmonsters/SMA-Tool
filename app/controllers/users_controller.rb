@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :admin_only, :except => :show
+  before_action :admin_only, :except => [:show, :edit]
 
   def index
     @users = User.all
@@ -13,6 +13,10 @@ class UsersController < ApplicationController
         redirect_to :back, :alert => "Access denied."
       end
     end
+  end
+  
+  def edit
+    
   end
 
   def update

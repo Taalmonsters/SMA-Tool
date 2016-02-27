@@ -1,0 +1,29 @@
+<%= link_to 'Back', :back %>
+<div class="row">
+	<div class="authform col-xs-10 col-xs-offset-1">
+		<h3>Edit profile</h3>
+		<%= form_for(current_user) do |f| %>
+		<div class="row">
+			<div class="col-xs-12 col-sm-6">
+				<fieldset>
+					<div class="form-group">
+						<%= f.label :name %>
+						<%= f.text_field :name, class: 'form-control', :disabled => true %>
+					</div>
+					<div class="form-group">
+						<%= f.label :email %>
+						<%= f.email_field :email, class: 'form-control', :disabled => true %>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<fieldset>
+					<%= f.submit 'Update', :class => 'button' %>
+				</fieldset>
+			</div>
+		</div>
+		<% end %>
+	</div>
+</div>
