@@ -11,26 +11,32 @@ class Tweet < ActiveRecord::Base
     if tweets.size > 0
       return tweets.first
     end
-    tweet = Tweet.create(:id_str => json['id_str'], :text => json['text'].gsub(/\n+/," "), 
-    :user_screen_name => json['user']['screen_name'], :user_location => json['user']['location'],
-    :in_reply_to_status_id_str => json['in_reply_to_status_id_str'],
-    :lang => json['lang'], :retweet_count => json['retweet_count'], 
-    :favorite_count => json['favorite_count'], :created_at => json['created_at'])
-    if tweet && !tweet.errors.any?
-      if json['entities']['hashtags'].size > 0
-        json['entities']['hashtags'].each do |ht|
-          p "*** HASHTAG"
-          hashtag = Hashtag.find_by_tag(ht['text'])
-          if !hashtag
-            hashtag = Hashtag.create(:tag => ht['text'])
+    unless Tweet.is_funky_text?(json['text'])
+      tweet = Tweet.create(:id_str => json['id_str'], :text => json['text'].gsub(/\n+/," "), 
+      :user_screen_name => json['user']['screen_name'], :user_location => json['user']['location'],
+      :in_reply_to_status_id_str => json['in_reply_to_status_id_str'],
+      :lang => json['lang'], :retweet_count => json['retweet_count'], 
+      :favorite_count => json['favorite_count'], :created_at => json['created_at'])
+      if tweet && !tweet.errors.any?
+        if json['entities']['hashtags'].size > 0
+          json['entities']['hashtags'].each do |ht|
+            p "*** HASHTAG"
+            hashtag = Hashtag.find_by_tag(ht['text'])
+            if !hashtag
+              hashtag = Hashtag.create(:tag => ht['text'])
+            end
+            tweet.hashtags << hashtag
           end
-          tweet.hashtags << hashtag
         end
+        tweet.set_sentiment_score
+        return tweet
       end
-      tweet.set_sentiment_score
-      return tweet
     end
     return nil
+  end
+  
+  def self.is_funky_text?(text)
+    text !~ /^[a-zA-Z0-9\.\,\+\:\)\(\;\'\"\-\_\*\#\@\!\$\%\&\?\<\>\n\\ ]+$/ || text =~ /^[0-9\.\,\+\:\)\(\;\'\"\-\_\*\#\@\!\$\%\&\?\<\>\n\\ ]+$/
   end
   
   def set_sentiment_score
