@@ -1,6 +1,6 @@
 require 'csv'
 require 'wtf_lang'
-WtfLang::API.key = "cf61c2ea74690c53839df12d97018826"
+WtfLang::API.key = ENV['WTF_LANG_API_KEY']
 class FacebookStatus < ActiveRecord::Base
   has_and_belongs_to_many :facebook_searches
   

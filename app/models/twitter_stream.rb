@@ -40,7 +40,7 @@ class TwitterStream < ActiveRecord::Base
         end
         sleep(5 * User.find(self.user_id).twitter_streams.where(:status => 1).size)
       end
-      self.update_attribute(:status, :finished)
+      # self.update_attribute(:status, :finished)
     end
   end
   
