@@ -9,10 +9,16 @@ class TwitterSearch < ActiveRecord::Base
     self.status ||= :waiting
   end
   
+  def self.is_terminated?(id)
+    el = TwitterSearch.find(id)
+    el == nil || el.status.to_s.eql?('finished')
+  end
+  
   def get_tweets
     self.update_attribute(:status, :running)
     p "*** GET TWEETS"
     Thread.new do
+      terminated = false
       tw_auth = TwitterAuth.where(:user_id => self.user_id).first
       access_token = prepare_access_token(tw_auth.consumer_key, tw_auth.consumer_secret, tw_auth.access_token, tw_auth.access_secret)
       (0..8).to_a.reverse.each do |i|
@@ -20,34 +26,41 @@ class TwitterSearch < ActiveRecord::Base
         p "*** DATE: "+date.to_s
         url = "https://api.twitter.com/1.1/search/tweets.json?result_type=mixed&until="+date+"&count=100&q="+URI::encode(self.query.gsub(/[\n ]+/,""))
         begin
-          response = access_token.get(url)
-          response = JSON.parse(response.body)
-          if response.has_key?("errors")
-            p "*** ERROR: "+response["errors"][0]["message"]
-            if response["errors"][0]["code"] == 88
-              sleep(900)
-              response = access_token.get(url)
-              response = JSON.parse(response.body)
-            else
-              response = nil
-              url = nil
+          terminated = TwitterSearch.is_terminated?(self.id)
+          response = nil
+          unless terminated
+            response = access_token.get(url)
+            response = JSON.parse(response.body)
+            if response.has_key?("errors")
+              p "*** ERROR: "+response["errors"][0]["message"]
+              if response["errors"][0]["code"] == 88
+                sleep(900)
+                response = access_token.get(url)
+                response = JSON.parse(response.body)
+              else
+                response = nil
+                url = nil
+              end
             end
           end
-          if response != nil
+          if response != nil && !terminated
             response["statuses"].each do |status|
+              terminated = TwitterSearch.is_terminated?(self.id)
+              p "*** STATUS: "+terminated.to_s
+              p "*** SSTATUS: "+TwitterSearch.find(self.id).status.to_s
               tweet = Tweet.from_json(status)
-              if !tweet.blank? && !self.tweets.include?(tweet)
+              if !tweet.blank? && !self.tweets.include?(tweet) && !terminated
                 self.tweets << tweet
               end
             end
-            if response["search_metadata"].has_key?("next_results") && !response["search_metadata"]["next_results"].blank?
-              url = "https://api.twitter.com/1.1/search/tweets.json"+response["search_metadata"]["next_results"]
-            else
+            if terminated || !response["search_metadata"].has_key?("next_results") || response["search_metadata"]["next_results"].blank?
               url = nil
+            else
+              url = "https://api.twitter.com/1.1/search/tweets.json"+response["search_metadata"]["next_results"]
             end
             sleep(5 * User.find(self.user_id).active_twitter_threads)
           end
-        end while url != nil
+        end while url != nil && !terminated
       end
       self.update_attribute(:status, :finished)
     end

@@ -109,8 +109,7 @@ class TwitterStreamsController < ApplicationController
   
   def stop
     if @twitter_stream
-      new_period = (((Time.now - @twitter_stream.created_at) / 24.hours) - 1).to_i
-      @twitter_stream.update_attribute(:period, new_period)
+      @twitter_stream.update_attribute(:status, 2)
       respond_to do |format|
         format.json { render json: 'Stream stopped', status: 200 }
       end

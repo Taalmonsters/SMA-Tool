@@ -33,6 +33,22 @@ $(document).on('click', '#stop-stream', function(e) {
 	callServer('/users/'+id+'/twitter_streams/'+stream_id+'/stop', 'POST', {}, null, null);
 });
 
+$(document).on('click', '#stop-twitter-search', function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+	var id = $('#stop-twitter-search').data('id');
+	var stream_id = $('#stop-twitter-search').data('search-id');
+	callServer('/users/'+id+'/twitter_searches/'+stream_id+'/stop', 'POST', {}, null, null);
+});
+
+$(document).on('click', '#stop-facebook-search', function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+	var id = $('#stop-facebook-search').data('id');
+	var stream_id = $('#stop-facebook-search').data('search-id');
+	callServer('/users/'+id+'/facebook_searches/'+stream_id+'/stop', 'POST', {}, null, null);
+});
+
 
 function callServer(url, method, params, target, callback) {
 	

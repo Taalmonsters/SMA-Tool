@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 20160228091149) do
 
   create_table "facebook_statuses", force: :cascade do |t|
     t.string   "id_str"
-    t.string   "text"
+    t.text     "text"
     t.string   "user_screen_name"
     t.string   "user_location"
     t.integer  "share_count"

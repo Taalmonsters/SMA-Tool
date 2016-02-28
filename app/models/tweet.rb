@@ -16,7 +16,7 @@ class Tweet < ActiveRecord::Base
     :in_reply_to_status_id_str => json['in_reply_to_status_id_str'],
     :lang => json['lang'], :retweet_count => json['retweet_count'], 
     :favorite_count => json['favorite_count'], :created_at => json['created_at'])
-    if tweet
+    if tweet && !tweet.errors.any?
       if json['entities']['hashtags'].size > 0
         json['entities']['hashtags'].each do |ht|
           p "*** HASHTAG"

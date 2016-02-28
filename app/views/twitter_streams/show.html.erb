@@ -4,7 +4,7 @@
 	    	<li><label>Query</label> <%= @twitter_stream.query %></li>
 	    	<li><label>Period (days)</label> <%= @twitter_stream.period %></li>
 	    	<li><label>Status</label> <span id="status" data-status="<%= @twitter_stream.status %>"><%= @twitter_stream.status.eql?(:finished) ? 'Finished' : 'Running (Expires at: '+@twitter_stream.expiration_date.to_s+')' %></span></li>
-	    	<% if !@twitter_stream.is_expired %>
+	    	<% if @twitter_stream.status == 1 %>
 	    	<li class="hidden"><label></label> <button id="stop-stream" data-id="<%= @user.id %>" data-stream-id="<%= @twitter_stream.id %>" class="btn-xs btn-warning">Stop stream</button></li>
 	    	<% end %>
 	    </ul>

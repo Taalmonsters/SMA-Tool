@@ -1,5 +1,9 @@
+<% if current_user.twitter_searches.size > 0 %>
 <div id="twitter-search-list">
 	<%= render 'twitter_searches/list' %>
 </div>
 <br>
+<% end %>
+<% if current_user.has_open_twitter_slots? %>
 <%= link_to 'New Twitter Search', new_user_twitter_search_path %>
+<% end %>

@@ -7,6 +7,9 @@
 	    	<% if @facebook_search.facebook_statuses.size > 0 %>
 	    	<li><label></label> <a href="/users/<%= @user.id %>/facebook_searches/<%= @facebook_search.id %>.csv" target="_blank" class="btn-xs btn-info">Download Facebook statuses</a></li>
 	    	<% end %>
+	    	<% if @facebook_search.status == 1 %>
+	    	<li class="hidden"><label></label> <button id="stop-facebook-search" data-id="<%= @user.id %>" data-search-id="<%= @facebook_search.id %>" class="btn-xs btn-warning">Stop stream</button></li>
+	    	<% end %>
 	    </ul>
 	</div>
 </div>

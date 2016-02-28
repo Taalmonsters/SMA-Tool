@@ -2,7 +2,7 @@ require 'csv'
 class TwitterSearchesController < ApplicationController
   before_action :set_user
   before_action :check_tw_auth
-  before_action :set_twitter_search, only: [:show, :edit, :update, :destroy]
+  before_action :set_twitter_search, only: [:show, :edit, :update, :destroy, :stop]
 
   # GET /twitter_searches
   # GET /twitter_searches.json
@@ -104,6 +104,15 @@ class TwitterSearchesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to user_twitter_searches_url, notice: 'Twitter search was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+  
+  def stop
+    if @twitter_search
+      @twitter_search.update_attribute(:status, 2)
+      respond_to do |format|
+        format.json { render json: 'Search stopped', status: 200 }
+      end
     end
   end
 

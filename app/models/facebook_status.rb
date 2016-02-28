@@ -51,20 +51,16 @@ class FacebookStatus < ActiveRecord::Base
         :user_location => uloc,
         :lang => l
       )
-      if st.errors.any?
-        p "*** ERROR: COULD NOT SAVE FACEBOOK_STATUS"
-        p st.errors.values.join("\n")
-        return nil
-      else
-        p "*** NEW FACEBOOK_STATUS CREATED"
+      if st && !st.errors.any?
         st.set_sentiment_score
         return st
       end
     end
+    return nil
   end
   
   def set_sentiment_score
-    if !self.lang.blank?
+    if !self.lang.blank? && self.text.length < 600
       if self.lang.eql?('nl')
         self.update_attribute(:sentiment, self.sentiment_analyzer_nl.analyze(self.text))
       elsif self.lang.eql?('en')

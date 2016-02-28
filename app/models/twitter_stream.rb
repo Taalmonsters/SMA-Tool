@@ -9,6 +9,11 @@ class TwitterStream < ActiveRecord::Base
     self.status ||= :waiting
   end
   
+  def self.is_terminated?(id)
+    el = TwitterStream.find(id)
+    el == nil || el.status.to_s.eql?('finished')
+  end
+  
   def is_expired
     DateTime.now.utc > self.created_at + self.period.days
   end
@@ -20,6 +25,7 @@ class TwitterStream < ActiveRecord::Base
   def get_stream
     self.update_attribute(:status, :running)
     Thread.new do
+      terminated = false
       tw_auth = TwitterAuth.where(:user_id => self.user_id).first
       TweetStream.configure do |config|
         config.consumer_key       = tw_auth.consumer_key
@@ -29,11 +35,14 @@ class TwitterStream < ActiveRecord::Base
         config.auth_method        = :oauth
       end
       TweetStream::Client.new.track(URI::encode(self.query)) do |status, client|
-        tweet = Tweet.from_json(JSON.parse(status.to_json))
-        if !tweet.blank? && !self.tweets.include?(tweet)
-          self.tweets << tweet
+        terminated = TwitterStream.is_terminated?(self.id)
+        unless terminated
+          tweet = Tweet.from_json(JSON.parse(status.to_json))
+          if !tweet.blank? && !self.tweets.include?(tweet)
+            self.tweets << tweet
+          end
         end
-        if self.is_expired
+        if terminated || self.is_expired
           p "*** TERMINATING TWEET STREAM "+self.id.to_s
           client.stop
           self.update_attribute(:status, :finished)

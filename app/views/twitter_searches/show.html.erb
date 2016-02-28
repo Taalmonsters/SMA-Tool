@@ -7,6 +7,9 @@
 	    	<% if @twitter_search.tweets.size > 0 %>
 	    	<li><label></label> <a href="/users/<%= @user.id %>/twitter_searches/<%= @twitter_search.id %>.csv" target="_blank" class="btn-xs btn-info">Download tweets</a></li>
 	    	<% end %>
+	    	<% if @twitter_search.status == 1 %>
+	    	<li class="hidden"><label></label> <button id="stop-twitter-search" data-id="<%= @user.id %>" data-search-id="<%= @twitter_search.id %>" class="btn-xs btn-warning">Stop stream</button></li>
+	    	<% end %>
 	    </ul>
 	</div>
 </div>

@@ -14,4 +14,6 @@ Rails.application.routes.draw do
   end
   
   post '/users/:user_id/twitter_streams/:id/stop' => 'twitter_streams#stop'
+  post '/users/:user_id/twitter_searches/:id/stop' => 'twitter_searches#stop'
+  post '/users/:user_id/facebook_searches/:id/stop' => 'facebook_searches#stop'
 end

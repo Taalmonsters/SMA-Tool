@@ -1,5 +1,9 @@
+<% if current_user.twitter_streams.size > 0 %>
 <div id="twitter-stream-list">
 	<%= render 'twitter_streams/list' %>
 </div>
 <br>
+<% end %>
+<% if current_user.has_open_twitter_slots? %>
 <%= link_to 'New Tweet stream', new_user_twitter_stream_path %>
+<% end %>

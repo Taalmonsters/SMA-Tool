@@ -1,6 +1,6 @@
 class FacebookSearchesController < ApplicationController
   before_action :set_user
-  before_action :set_facebook_search, only: [:show, :edit, :update, :destroy]
+  before_action :set_facebook_search, only: [:show, :edit, :update, :destroy, :stop]
 
   # GET /facebook_searches
   # GET /facebook_searches.json
@@ -102,6 +102,15 @@ class FacebookSearchesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to user_facebook_searches_url, notice: 'Facebook search was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+  
+  def stop
+    if @facebook_search
+      @facebook_search.update_attribute(:status, 2)
+      respond_to do |format|
+        format.json { render json: 'Search stopped', status: 200 }
+      end
     end
   end
 

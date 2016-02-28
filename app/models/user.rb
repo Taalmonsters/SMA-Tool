@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   end
   
   def facebook
-    @facebook ||= Koala::Facebook::API.new(oauth_token)
+    Koala::Facebook::API.new(oauth_token)
   end
   
   def active_twitter_threads
@@ -44,6 +44,14 @@ class User < ActiveRecord::Base
       return true
     end
     return false
+  end
+  
+  def has_open_facebook_slots?
+    !facebook_searches.where(:status => 1).any?
+  end
+  
+  def has_open_twitter_slots?
+    twitter_searches.where(:status => 1).size + twitter_streams.where(:status => 1).size < 2
   end
   
   def csv_data(options = {})

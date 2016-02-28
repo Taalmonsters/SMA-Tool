@@ -5,7 +5,7 @@
     	<th>Tweet count</th>
     	<th>Status</th>
     	<th>Expires</th>
-      <th colspan="2"></th>
+      <th colspan="3"></th>
     </tr>
   </thead>
 
@@ -17,6 +17,7 @@
       	<td><%= twitter_stream.status %></td>
       	<td><%= !twitter_stream.is_expired ? twitter_stream.created_at + twitter_stream.period.days : '' %></td>
         <td><%= link_to 'Show', user_twitter_stream_path(:id => twitter_stream.id) %></td>
+        <td><a href="#" id="stop-stream" data-id="<%= current_user.id %>" data-stream-id="<%= twitter_stream.id %>">Stop</a></td>
         <td><%= link_to 'Destroy', user_twitter_stream_path(:id => twitter_stream.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>

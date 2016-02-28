@@ -2,7 +2,7 @@ class CreateFacebookStatuses < ActiveRecord::Migration
   def change
     create_table :facebook_statuses do |t|
       t.string :id_str
-      t.string :text
+      t.text :text
       t.string :user_screen_name
       t.string :user_location
       t.integer :share_count
