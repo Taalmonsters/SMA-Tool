@@ -45,7 +45,7 @@ class TwitterSearch < ActiveRecord::Base
             else
               url = nil
             end
-            sleep(5 * User.find(self.user_id).twitter_searches.where(:status => 1).size)
+            sleep(5 * User.find(self.user_id).active_twitter_threads)
           end
         end while url != nil
       end

@@ -37,8 +37,9 @@ class TwitterStream < ActiveRecord::Base
           p "*** TERMINATING TWEET STREAM "+self.id.to_s
           client.stop
           self.update_attribute(:status, :finished)
+        else
+          sleep(5 * User.find(self.user_id).active_twitter_threads)
         end
-        sleep(5 * User.find(self.user_id).twitter_streams.where(:status => 1).size)
       end
       # self.update_attribute(:status, :finished)
     end

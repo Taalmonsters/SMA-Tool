@@ -35,6 +35,10 @@ class User < ActiveRecord::Base
     @facebook ||= Koala::Facebook::API.new(oauth_token)
   end
   
+  def active_twitter_threads
+    twitter_streams.where(:status => 1).size + twitter_searches.where(:status => 1).size + twitter_id_searches.where(:status => 1).size
+  end
+  
   def has_data?
     if self.twitter_streams.any? || self.twitter_searches.any? || self.twitter_id_searches.any? || self.facebook_searches.any?
       return true
