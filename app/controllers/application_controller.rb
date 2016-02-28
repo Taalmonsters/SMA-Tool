@@ -7,6 +7,12 @@ class ApplicationController < ActionController::Base
   helper_method :user_signed_in?
   helper_method :is_correct_user?
   helper_method :correct_user?
+  
+  protected
+
+  def set_user
+    @user = current_user
+  end
 
   private
   def current_user
@@ -37,10 +43,6 @@ class ApplicationController < ActionController::Base
     if !current_user
       redirect_to root_url, :alert => 'You need to sign in for access to this page.'
     end
-  end
-
-  def set_user
-    @user = current_user
   end
 
   def check_tw_auth

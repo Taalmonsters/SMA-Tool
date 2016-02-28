@@ -1,3 +1,4 @@
+require 'csv'
 class User < ActiveRecord::Base
   enum role: [:user, :vip, :admin]
   after_initialize :set_default_role, :if => :new_record?
@@ -34,22 +35,58 @@ class User < ActiveRecord::Base
     @facebook ||= Koala::Facebook::API.new(oauth_token)
   end
   
-  def search(query)
-    facebook.search(query, { :type => 'post' })
+  def has_data?
+    if self.twitter_streams.any? || self.twitter_searches.any? || self.twitter_id_searches.any? || self.facebook_searches.any?
+      return true
+    end
+    return false
   end
   
-  def facebook_profile
-    facebook.get_object("me")
-  rescue Koala::Facebook::APIError => e
-    logger.info e.to_s
-    nil
-  end
-  
-  def friends_count
-    facebook.get_connection("me", "friends").size
-  rescue Koala::Facebook::APIError => e
-    logger.info e.to_s
-    nil
+  def csv_data(options = {})
+    c = ['query', 'result_type', 'id_str', 'user_screen_name', 'user_location', 'text', 'lang', 'retweet_count/share_count', 'favorite_count/like_count', 'sentiment', 'in_reply_to_status_id_str', 'created_at', 'hashtags']
+    ctw = ['id_str', 'user_screen_name', 'user_location', 'text', 'lang', 'retweet_count', 'favorite_count', 'sentiment', 'in_reply_to_status_id_str', 'created_at']
+    cfb = ['id_str', 'user_screen_name', 'user_location', 'text', 'lang', 'share_count', 'like_count', 'sentiment', 'in_reply_to_status_id_str', 'created_at']
+    CSV.generate(options) do |csv|
+      csv << c
+      tweets_by_query = {}
+      if self.twitter_streams.any?
+        self.twitter_streams.each do |twitter_stream|
+          if !tweets_by_query.has_key?(twitter_stream.query)
+            tweets_by_query[twitter_stream.query] = []
+          end
+          tweets_by_query[twitter_stream.query] = tweets_by_query[twitter_stream.query] | twitter_stream.tweets
+        end
+      end
+      if self.twitter_searches.any?
+        self.twitter_searches.each do |twitter_search|
+          if !tweets_by_query.has_key?(twitter_search.query)
+            tweets_by_query[twitter_search.query] = []
+          end
+          tweets_by_query[twitter_search.query] = tweets_by_query[twitter_search.query] | twitter_search.tweets
+        end
+      end
+      if self.twitter_id_searches.any?
+        self.twitter_id_searches.each do |twitter_id_search|
+          if !tweets_by_query.has_key?(twitter_id_search.query)
+            tweets_by_query[twitter_id_search.query] = []
+          end
+          tweets_by_query[twitter_id_search.query] = tweets_by_query[twitter_id_search.query] | twitter_id_search.tweets
+        end
+      end
+      tweets_by_query.each do |query, tweets|
+        tweets.each do |tweet|
+          csv << [query, 'tweet'] + tweet.attributes.values_at(*ctw) + [tweet.hashtags_string]
+        end
+      end
+      
+      if self.facebook_searches.any?
+        self.facebook_searches.each do |facebook_search|
+          facebook_search.facebook_statuses.each do |facebook_status|
+            csv << [facebook_search.query, 'facebook_status'] + facebook_status.attributes.values_at(*cfb) + [""]
+          end
+        end
+      end
+    end
   end
 
 end

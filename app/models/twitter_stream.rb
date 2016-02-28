@@ -28,7 +28,7 @@ class TwitterStream < ActiveRecord::Base
         config.oauth_token_secret = tw_auth.access_secret
         config.auth_method        = :oauth
       end
-      TweetStream::Client.new.track(URI::encode(self.search_term)) do |status, client|
+      TweetStream::Client.new.track(URI::encode(self.query)) do |status, client|
         tweet = Tweet.from_json(JSON.parse(status.to_json))
         if !tweet.blank? && !self.tweets.include?(tweet)
           self.tweets << tweet
@@ -38,7 +38,7 @@ class TwitterStream < ActiveRecord::Base
           client.stop
           self.update_attribute(:status, :finished)
         end
-        sleep(5 * TwitterStream.where(:user_id => self.user_id).size)
+        sleep(5 * User.find(self.user_id).twitter_streams.where(:status => 1).size)
       end
       self.update_attribute(:status, :finished)
     end

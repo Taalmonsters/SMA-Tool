@@ -2,6 +2,7 @@
 	<div class="col-xs-12">
 	    <ul class="list-unstyled">
 	    	<li><label>Query</label> <%= @facebook_search.query %></li>
+	    	<li><label>Status</label> <span id="status" data-status="<%= @facebook_search.status %>"><%= @facebook_search.status.eql?(:finished) ? 'Finished' : 'Running' %></span></li>
 	    	<li><label>Status count</label> <span id="tweet-count"><%= @facebook_search.facebook_statuses.size %></span></li>
 	    	<% if @facebook_search.facebook_statuses.size > 0 %>
 	    	<li><label></label> <a href="/users/<%= @user.id %>/facebook_searches/<%= @facebook_search.id %>.csv" target="_blank" class="btn-xs btn-info">Download Facebook statuses</a></li>

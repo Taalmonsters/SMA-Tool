@@ -65,7 +65,7 @@ class FacebookSearchesController < ApplicationController
       respond_to do |format|
         if @facebook_search.save
           @user.facebook_searches << @facebook_search
-          @facebook_search.get_statuses
+          @facebook_search.get_statuses(@user.facebook)
           format.html { redirect_to user_facebook_search_url(:id => @facebook_search.id), notice: 'Facebook search was successfully created.' }
           format.json { render :show, status: :created, location: @facebook_search }
         else

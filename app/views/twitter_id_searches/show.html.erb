@@ -2,6 +2,7 @@
 	<div class="col-xs-12">
 	    <ul class="list-unstyled">
 	    	<li><label>Query</label> <%= @twitter_id_search.query %></li>
+	    	<li><label>Status</label> <span id="status" data-status="<%= @twitter_id_search.status %>"><%= @twitter_id_search.status.eql?(:finished) ? 'Finished' : 'Running' %></span></li>
 	    	<li><label>Tweet count</label> <span id="tweet-count"><%= @twitter_id_search.tweets.size %></span></li>
 	    	<% if @twitter_id_search.tweets.size > 0 %>
 	    	<li><label></label> <a href="/users/<%= @user.id %>/twitter_id_searches/<%= @twitter_id_search.id %>.csv" target="_blank" class="btn-xs btn-info">Download tweets</a></li>

@@ -5,6 +5,8 @@
 			<th>Location</th>
 			<th>Created at</th>
 			<th style="max-width: 400px;">Text</th>
+			<th>Sentiment score</th>
+			<th>Sentiment</th>
 			<th>RT</th>
 			<th>FAV</th>
 		</tr>
@@ -16,6 +18,16 @@
 			<td><%= tweet.user_location %></td>
 			<td><%= tweet.created_at.strftime("%Y-%m-%d %H:%M") %></td>
 			<td style="max-width: 400px;"><%= tweet.text %></td>
+			<td><%= tweet.sentiment.blank? ? 0.0 : tweet.sentiment.round(2) %></td>
+			<td>
+				<% if tweet.sentiment.blank? || (tweet.sentiment > -0.25 && tweet.sentiment < 0.25) %>
+				neutral
+				<% elsif tweet.sentiment <= -0.25 %>
+				negative
+				<% else %>
+				positive
+				<% end %>
+			</td>
 			<td><%= tweet.retweet_count %></td>
 			<td><%= tweet.favorite_count %></td>
 		</tr>

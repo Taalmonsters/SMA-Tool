@@ -2,8 +2,9 @@
   <thead>
     <tr>
     	<th>Query</th>
+    	<th>Facebook status count</th>
+    	<th>Status</th>
     	<th>Created at</th>
-    	<th>Status count</th>
       <th colspan="2"></th>
     </tr>
   </thead>
@@ -12,8 +13,9 @@
     <% @facebook_searches.each do |facebook_search| %>
       <tr>
       	<td><%= facebook_search.query %></td>
-      	<td><%= facebook_search.created_at.strftime("%Y-%m-%d %H:%M") %></td>
       	<td><%= facebook_search.facebook_statuses.size %></td>
+      	<td><%= facebook_search.status %></td>
+      	<td><%= facebook_search.created_at.strftime("%Y-%m-%d %H:%M") %></td>
         <td><%= link_to 'Show', user_facebook_search_path(:id => facebook_search.id) %></td>
         <td><%= link_to 'Destroy', user_facebook_search_path(:id => facebook_search.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

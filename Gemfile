@@ -23,6 +23,9 @@ gem "koala", "2.2.0rc3"
 gem 'tweetstream'
 gem 'oauth'
 gem 'will_paginate-bootstrap'
+gem 'wtf_lang'
+gem 'sentiment_lib'
+gem 'nokogiri'
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]

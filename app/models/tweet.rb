@@ -1,3 +1,4 @@
+require 'csv'
 class Tweet < ActiveRecord::Base
   has_and_belongs_to_many :twitter_streams
   has_and_belongs_to_many :twitter_searches
@@ -26,13 +27,30 @@ class Tweet < ActiveRecord::Base
           tweet.hashtags << hashtag
         end
       end
+      tweet.set_sentiment_score
       return tweet
     end
     return nil
   end
   
+  def set_sentiment_score
+    if self.lang.eql?('nl')
+      self.update_attribute(:sentiment, self.sentiment_analyzer_nl.analyze(self.text))
+    elsif self.lang.eql?('en')
+      self.update_attribute(:sentiment, self.sentiment_analyzer_en.analyze(self.text))
+    end
+  end
+  
+  def sentiment_analyzer_nl
+    @analyzer_nl ||= SentimentLib::Analyzer.new(:strategy => SentimentAnalyzerDutch.new)
+  end
+  
+  def sentiment_analyzer_en
+    @analyzer_en ||= SentimentLib::Analyzer.new(:strategy => SentimentAnalyzerEnglish.new)
+  end
+  
   def self.to_csv(options = {})
-    c = ['id_str', 'user_screen_name', 'user_location', 'text', 'retweet_count', 'favorite_count', 'created_at']
+    c = ['id_str', 'user_screen_name', 'user_location', 'text', 'lang', 'retweet_count', 'favorite_count', 'sentiment', 'in_reply_to_status_id_str', 'created_at']
     cc = c + ['hashtags']
     CSV.generate(options) do |csv|
       csv << cc

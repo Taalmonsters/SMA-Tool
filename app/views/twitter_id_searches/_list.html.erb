@@ -2,8 +2,9 @@
   <thead>
     <tr>
     	<th>Query</th>
-    	<th>Created at</th>
     	<th>Tweet count</th>
+    	<th>Status</th>
+    	<th>Created at</th>
       <th colspan="2"></th>
     </tr>
   </thead>
@@ -12,8 +13,9 @@
     <% @twitter_id_searches.each do |twitter_id_search| %>
       <tr>
       	<td><%= twitter_id_search.query %></td>
-      	<td><%= twitter_id_search.created_at.strftime("%Y-%m-%d %H:%M") %></td>
       	<td><%= twitter_id_search.tweets.size %></td>
+      	<td><%= twitter_id_search.status %></td>
+      	<td><%= twitter_id_search.created_at.strftime("%Y-%m-%d %H:%M") %></td>
         <td><%= link_to 'Show', user_twitter_id_search_path(:id => twitter_id_search.id) %></td>
         <td><%= link_to 'Destroy', user_twitter_id_search_path(:id => twitter_id_search.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>

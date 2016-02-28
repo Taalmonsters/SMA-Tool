@@ -14,7 +14,7 @@
       <tr>
       	<td><%= twitter_stream.query %></td>
       	<td><%= twitter_stream.tweets.size %></td>
-      	<td><%= twitter_stream.is_expired ? 'Finished' : 'Running' %></td>
+      	<td><%= twitter_stream.status %></td>
       	<td><%= !twitter_stream.is_expired ? twitter_stream.created_at + twitter_stream.period.days : '' %></td>
         <td><%= link_to 'Show', user_twitter_stream_path(:id => twitter_stream.id) %></td>
         <td><%= link_to 'Destroy', user_twitter_stream_path(:id => twitter_stream.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>

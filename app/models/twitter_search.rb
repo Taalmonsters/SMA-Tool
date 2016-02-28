@@ -15,19 +15,39 @@ class TwitterSearch < ActiveRecord::Base
     Thread.new do
       tw_auth = TwitterAuth.where(:user_id => self.user_id).first
       access_token = prepare_access_token(tw_auth.consumer_key, tw_auth.consumer_secret, tw_auth.access_token, tw_auth.access_secret)
-      (0..7).to_a.reverse.each do |i|
+      (0..8).to_a.reverse.each do |i|
         date = (Time.now - i.days).strftime("%Y-%m-%d")
         p "*** DATE: "+date.to_s
         url = "https://api.twitter.com/1.1/search/tweets.json?result_type=mixed&until="+date+"&count=100&q="+URI::encode(self.query.gsub(/[\n ]+/,""))
-        response = access_token.get(url)
-        response = JSON.parse(response.body)
-        response["statuses"].each do |status|
-          tweet = Tweet.from_json(status)
-          if !tweet.blank? && !self.tweets.include?(tweet)
-            self.tweets << tweet
+        begin
+          response = access_token.get(url)
+          response = JSON.parse(response.body)
+          if response.has_key?("errors")
+            p "*** ERROR: "+response["errors"][0]["message"]
+            if response["errors"][0]["code"] == 88
+              sleep(900)
+              response = access_token.get(url)
+              response = JSON.parse(response.body)
+            else
+              response = nil
+              url = nil
+            end
           end
-        end
-        sleep(5)
+          if response != nil
+            response["statuses"].each do |status|
+              tweet = Tweet.from_json(status)
+              if !tweet.blank? && !self.tweets.include?(tweet)
+                self.tweets << tweet
+              end
+            end
+            if response["search_metadata"].has_key?("next_results") && !response["search_metadata"]["next_results"].blank?
+              url = "https://api.twitter.com/1.1/search/tweets.json"+response["search_metadata"]["next_results"]
+            else
+              url = nil
+            end
+            sleep(5 * User.find(self.user_id).twitter_searches.where(:status => 1).size)
+          end
+        end while url != nil
       end
       self.update_attribute(:status, :finished)
     end

@@ -15,10 +15,23 @@ class TwitterIdSearch < ActiveRecord::Base
     url = "https://api.twitter.com/1.1/statuses/lookup.json?id="+self.query.gsub(/[\n ]+/,"")
     response = access_token.get(url)
     response = JSON.parse(response.body)
-    response.each do |status|
-      tweet = Tweet.from_json(status)
-      if !tweet.blank? && !self.tweets.include?(tweet)
-        self.tweets << tweet
+    if response.has_key?("errors")
+      p "*** ERROR: "+response["errors"][0]["message"]
+      if response["errors"][0]["code"] == 88
+        sleep(900)
+        response = access_token.get(url)
+        response = JSON.parse(response.body)
+      else
+        response = nil
+        url = nil
+      end
+    end
+    if response != nil
+      response.each do |status|
+        tweet = Tweet.from_json(status)
+        if !tweet.blank? && !self.tweets.include?(tweet)
+          self.tweets << tweet
+        end
       end
     end
     self.update_attribute(:status, :finished)

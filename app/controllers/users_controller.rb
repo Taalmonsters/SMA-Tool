@@ -14,6 +14,10 @@ class UsersController < ApplicationController
         redirect_to :back, :alert => "Access denied."
       end
     end
+    respond_to do |format|
+      format.html
+      format.csv { render text: @user.csv_data(col_sep: "\t") }
+    end
   end
   
   def edit

@@ -4,3 +4,8 @@
 	<li class="menu-item <%= "active" if @page_title && @page_title.eql?('twitter_id_search') %>"><%= link_to 'Twitter Search by ID', user_twitter_id_searches_path(@user.id) %></li>
 	<li class="menu-item <%= "active" if @page_title && @page_title.eql?('facebook_search') %>"><%= link_to 'Facebook Search by Keyword', user_facebook_searches_path(@user.id) %></li>
 </ul>
+<br>
+<br>
+<% if current_user.has_data? %>
+<%= link_to 'Download all data', user_path(:id => current_user.id, :format => :csv), :class => 'btn btn-info' %>
+<% end %>

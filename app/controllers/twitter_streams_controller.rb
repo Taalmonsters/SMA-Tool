@@ -127,7 +127,7 @@ class TwitterStreamsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def twitter_stream_params
-      params.require(:twitter_stream).permit(:search_term, :period)
+      params.require(:twitter_stream).permit(:query, :period)
       # params.fetch(:twitter_stream, {})
     end
 end

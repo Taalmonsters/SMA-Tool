@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160227164116) do
+ActiveRecord::Schema.define(version: 20160228091149) do
 
   create_table "facebook_searches", force: :cascade do |t|
     t.string   "query"
@@ -35,8 +35,11 @@ ActiveRecord::Schema.define(version: 20160227164116) do
     t.string   "user_location"
     t.integer  "share_count"
     t.integer  "like_count"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.string   "in_reply_to_status_id_str"
+    t.string   "lang"
+    t.float    "sentiment"
   end
 
   create_table "hashtags", force: :cascade do |t|
@@ -61,6 +64,7 @@ ActiveRecord::Schema.define(version: 20160227164116) do
     t.integer  "favorite_count"
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+    t.float    "sentiment"
   end
 
   create_table "tweets_twitter_id_searches", id: false, force: :cascade do |t|
