@@ -13,12 +13,12 @@ class Tweet < ActiveRecord::Base
     end
     unless Tweet.is_funky_text?(json['text'])
       tweet = Tweet.create(:id_str => json['id_str'], :text => json['text'].gsub(/\n+/," "), 
-      :user_screen_name => json['user']['screen_name'], :user_location => json['user']['location'],
-      :in_reply_to_status_id_str => json['in_reply_to_status_id_str'],
-      :lang => json['lang'], :retweet_count => json['retweet_count'], 
-      :favorite_count => json['favorite_count'], :created_at => json['created_at'])
-      if tweet && !tweet.errors.any?
-        if json['entities']['hashtags'].size > 0
+      :user_screen_name => json.has_key?('user') && json['user'].has_key?('screen_name') ? json['user']['screen_name'] : '', :user_location => json.has_key?('user') && json['user'].has_key?('location') ? json['user']['location'] : '',
+      :in_reply_to_status_id_str => json.has_key?('in_reply_to_status_id_str') ? json['in_reply_to_status_id_str'] : '',
+      :lang => json.has_key?('lang') ? json['lang'] : '', :retweet_count => json.has_key?('retweet_count') ? json['retweet_count'] : 0, 
+      :favorite_count => json.has_key?('favorite_count') ? json['favorite_count'] : 0, :created_at => json.has_key?('created_at') ? json['created_at'] : DateTime.now)
+      if tweet != nil && !tweet.errors.any?
+        if json.has_key?('entities') && json['entities'].has_key?('hashtags') && json['entities']['hashtags'].size > 0
           json['entities']['hashtags'].each do |ht|
             p "*** HASHTAG"
             hashtag = Hashtag.find_by_tag(ht['text'])
