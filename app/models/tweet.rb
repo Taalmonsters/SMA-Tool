@@ -11,7 +11,7 @@ class Tweet < ActiveRecord::Base
     if tweets.size > 0
       return tweets.first
     end
-    unless Tweet.is_funky_text?(json['text'])
+    # unless Tweet.is_funky_text?(json['text'])
       tweet = Tweet.create(:id_str => json['id_str'], :text => json['text'].gsub(/\n+/," "), 
       :user_screen_name => json.has_key?('user') && json['user'].has_key?('screen_name') ? json['user']['screen_name'] : '', :user_location => json.has_key?('user') && json['user'].has_key?('location') ? json['user']['location'] : '',
       :in_reply_to_status_id_str => json.has_key?('in_reply_to_status_id_str') ? json['in_reply_to_status_id_str'] : '',
@@ -31,7 +31,7 @@ class Tweet < ActiveRecord::Base
         tweet.set_sentiment_score
         return tweet
       end
-    end
+    # end
     return nil
   end
   
