@@ -6,4 +6,6 @@
 <% end %>
 <% if current_user.has_open_twitter_slots? %>
 <%= link_to 'New Tweet stream', new_user_twitter_stream_path %>
+<% else %>
+<p>Please wait until your previous Twitter searches or streams have finished before adding a new one.</p>
 <% end %>

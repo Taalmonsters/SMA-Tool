@@ -9,16 +9,16 @@ class FacebookStatus < ActiveRecord::Base
       p "*** FACEBOOK_STATUS EXISTS"
       return FacebookStatus.where(:id_str => idstr).first
     else
+      p "*** NEW FACEBOOK_STATUS "+idstr
       obj = nil
       if is_comment
         obj = facebook.get_object(idstr, {:fields => ["likes.summary(true)", "message"]})
       else
         obj = facebook.get_object(idstr, {:fields => ["likes.summary(true)", "shares.summary(true)", "message"]})
       end
-      if !obj.has_key?('message') || obj['message'].blank? || obj['message'] !~ /^[a-zA-Z0-9\.\,\+\:\)\(\;\'\"\-\_\*\#\@\!\$\%\&\? ]+$/ || obj['message'] =~ /^[0-9\.\,\+\:\)\(\;\'\"\-\_\*\#\@\!\$\%\&\? ]+$/
+      if !obj.has_key?('message') || obj['message'].blank? || obj['message'] !~ /^[a-zA-Z0-9\.\,\+\:\)\(\;\'\"\-\_\*\#\@\!\$\%\&\?\<\>\n\\ ]+$/ || obj['message'] =~ /^[0-9\.\,\+\:\)\(\;\'\"\-\_\*\#\@\!\$\%\&\?\<\>\n\\ ]+$/
         return nil
       end
-      p "*** NEW FACEBOOK_STATUS "+idstr
       lc = obj['likes']['summary']['total_count']
       p "*** LC: "+lc.to_s
       sc = 0

@@ -7,6 +7,5 @@
 <% if current_user.has_open_facebook_slots? %>
 <%= link_to 'New Facebook search', new_user_facebook_search_path %>
 <% else %>
-<%= link_to 'New Facebook search', new_user_facebook_search_path, :disabled => true %>
-<p>Please wait until your previous search is finished.</p>
+<p>Please wait until your previous search is finished before adding a new one.</p>
 <% end %>
