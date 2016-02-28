@@ -34,19 +34,27 @@ class Tweet < ActiveRecord::Base
   end
   
   def set_sentiment_score
-    if self.lang.eql?('nl')
-      self.update_attribute(:sentiment, self.sentiment_analyzer_nl.analyze(self.text))
-    elsif self.lang.eql?('en')
-      self.update_attribute(:sentiment, self.sentiment_analyzer_en.analyze(self.text))
+    if !self.lang.blank?
+      if self.lang.eql?('nl')
+        self.update_attribute(:sentiment, self.sentiment_analyzer_nl.analyze(self.text))
+      elsif self.lang.eql?('en')
+        self.update_attribute(:sentiment, self.sentiment_analyzer_en.analyze(self.text))
+      end
     end
   end
   
   def sentiment_analyzer_nl
-    @analyzer_nl ||= SentimentLib::Analyzer.new(:strategy => SentimentAnalyzerDutch.new)
+    if Rails.configuration.x.sentiment_analyzer.nl == nil
+      Rails.configuration.x.sentiment_analyzer.nl = SentimentLib::Analyzer.new(:strategy => SentimentAnalyzerDutch.new)
+    end
+    Rails.configuration.x.sentiment_analyzer.nl
   end
   
   def sentiment_analyzer_en
-    @analyzer_en ||= SentimentLib::Analyzer.new(:strategy => SentimentAnalyzerEnglish.new)
+    if Rails.configuration.x.sentiment_analyzer.en == nil
+      Rails.configuration.x.sentiment_analyzer.en = SentimentLib::Analyzer.new(:strategy => SentimentAnalyzerEnglish.new)
+    end
+    Rails.configuration.x.sentiment_analyzer.en
   end
   
   def self.to_csv(options = {})

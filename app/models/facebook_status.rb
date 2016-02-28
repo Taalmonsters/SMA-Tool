@@ -15,7 +15,7 @@ class FacebookStatus < ActiveRecord::Base
       else
         obj = facebook.get_object(idstr, {:fields => ["likes.summary(true)", "shares.summary(true)", "message"]})
       end
-      if !obj.has_key?('message') || obj['message'].blank? || obj['message'] !~ /^[a-zA-Z0-9\.\,\+\:\)\(\;\'\"\-\_\*\#\@\!\$\%\&\? ]+$/
+      if !obj.has_key?('message') || obj['message'].blank? || obj['message'] !~ /^[a-zA-Z0-9\.\,\+\:\)\(\;\'\"\-\_\*\#\@\!\$\%\&\? ]+$/ || obj['message'] =~ /^[0-9\.\,\+\:\)\(\;\'\"\-\_\*\#\@\!\$\%\&\? ]+$/
         return nil
       end
       p "*** NEW FACEBOOK_STATUS "+idstr
@@ -32,7 +32,13 @@ class FacebookStatus < ActiveRecord::Base
       p "*** ULOC: "+uloc
       text = obj['message'].gsub(/\n+/," ")
       p "*** TEXT: "+text
-      l = text.lang
+      l = ''
+      begin
+        l = text.lang
+      rescue
+        
+      end
+      # l = text.lang
       p "*** LANG: "+l
       st = FacebookStatus.create(
         :id_str => idstr,
@@ -51,9 +57,34 @@ class FacebookStatus < ActiveRecord::Base
         return nil
       else
         p "*** NEW FACEBOOK_STATUS CREATED"
+        st.set_sentiment_score
         return st
       end
     end
+  end
+  
+  def set_sentiment_score
+    if !self.lang.blank?
+      if self.lang.eql?('nl')
+        self.update_attribute(:sentiment, self.sentiment_analyzer_nl.analyze(self.text))
+      elsif self.lang.eql?('en')
+        self.update_attribute(:sentiment, self.sentiment_analyzer_en.analyze(self.text))
+      end
+    end
+  end
+  
+  def sentiment_analyzer_nl
+    if Rails.configuration.x.sentiment_analyzer.nl == nil
+      Rails.configuration.x.sentiment_analyzer.nl = SentimentLib::Analyzer.new(:strategy => SentimentAnalyzerDutch.new)
+    end
+    Rails.configuration.x.sentiment_analyzer.nl
+  end
+  
+  def sentiment_analyzer_en
+    if Rails.configuration.x.sentiment_analyzer.en == nil
+      Rails.configuration.x.sentiment_analyzer.en = SentimentLib::Analyzer.new(:strategy => SentimentAnalyzerEnglish.new)
+    end
+    Rails.configuration.x.sentiment_analyzer.en
   end
   
   def self.get_user_location(uid,facebook)
