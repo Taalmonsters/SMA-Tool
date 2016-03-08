@@ -51,7 +51,6 @@ class TwitterStream < ActiveRecord::Base
           sleep(5 * User.find(self.user_id).active_twitter_threads)
         end
       end
-      # self.update_attribute(:status, :finished)
     end
   end
   

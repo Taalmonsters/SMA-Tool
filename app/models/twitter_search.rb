@@ -47,8 +47,6 @@ class TwitterSearch < ActiveRecord::Base
           if response != nil && !terminated
             response["statuses"].each do |status|
               terminated = TwitterSearch.is_terminated?(self.id)
-              p "*** STATUS: "+terminated.to_s
-              p "*** SSTATUS: "+TwitterSearch.find(self.id).status.to_s
               tweet = Tweet.from_json(status)
               if !tweet.blank? && !self.tweets.include?(tweet) && !terminated
                 self.tweets << tweet

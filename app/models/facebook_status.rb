@@ -6,10 +6,8 @@ class FacebookStatus < ActiveRecord::Base
   
   def self.from_idstr_and_uid(idstr,uid,facebook,reaction_to,is_comment)
     if FacebookStatus.where(:id_str => idstr).any?
-      p "*** FACEBOOK_STATUS EXISTS"
       return FacebookStatus.where(:id_str => idstr).first
     else
-      p "*** NEW FACEBOOK_STATUS "+idstr
       obj = nil
       if is_comment
         obj = facebook.get_object(idstr, {:fields => ["likes.summary(true)", "message"]})
@@ -20,26 +18,19 @@ class FacebookStatus < ActiveRecord::Base
         return nil
       end
       lc = obj['likes']['summary']['total_count']
-      p "*** LC: "+lc.to_s
       sc = 0
       if obj.has_key?('shares') && obj['shares'].has_key?('count')
         sc = obj['shares']['count']
       end
-      p "*** SC: "+sc.to_s
       uname = facebook.get_object(uid, {:fields => ["name"]})['name']
-      p "*** UNAME: "+uname
       uloc = self.get_user_location(uid,facebook)
-      p "*** ULOC: "+uloc
       text = obj['message'].gsub(/\n+/," ")
-      p "*** TEXT: "+text
       l = ''
       begin
         l = text.lang
       rescue
         
       end
-      # l = text.lang
-      p "*** LANG: "+l
       st = FacebookStatus.create(
         :id_str => idstr,
         :in_reply_to_status_id_str => reaction_to.blank? ? '' : reaction_to,

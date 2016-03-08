@@ -6,7 +6,6 @@ class Tweet < ActiveRecord::Base
   has_and_belongs_to_many :hashtags
   
   def self.from_json(json)
-    p "*** NEW TWEET: "+json['text']
     tweets = Tweet.where(:id_str => json['id_str'])
     if tweets.size > 0
       return tweets.first
@@ -20,7 +19,6 @@ class Tweet < ActiveRecord::Base
       if tweet != nil && !tweet.errors.any?
         if json.has_key?('entities') && json['entities'].has_key?('hashtags') && json['entities']['hashtags'].size > 0
           json['entities']['hashtags'].each do |ht|
-            p "*** HASHTAG"
             hashtag = Hashtag.find_by_tag(ht['text'])
             if !hashtag
               hashtag = Hashtag.create(:tag => ht['text'])

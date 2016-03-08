@@ -26,22 +26,17 @@ class FacebookSearch < ActiveRecord::Base
           page_collection.each do |page|
             terminated = FacebookSearch.is_terminated?(self.id)
             unless terminated
-              p "*** PAGE: "+page["id"]
               posts_collection = facebook.get_connections(page["id"], "posts", limit: 100, filter: 'stream')
-              p "*** TERMINATED: "+terminated.to_s
               if posts_collection.size > 0
                 begin
                   posts_collection.each do |post|
-                    p "*** POST: "+post["id"]
                     terminated = FacebookSearch.is_terminated?(self.id)
                     unless terminated
-                      p "*** POST: "+post["id"]
                       facebook_status = FacebookStatus.from_idstr_and_uid(post["id"],page["id"],facebook,nil,false)
                       if facebook_status != nil && !self.facebook_statuses.include?(facebook_status)
                         self.facebook_statuses << facebook_status
                         # Get comments to status
                         comment_count = facebook.get_object(post["id"], {:fields => "comments.summary(true)"})['comments']['summary']['total_count']
-                        p "*** COMMENT COUNT: "+comment_count.to_s
                         if comment_count > 0
                           comments = facebook.get_connections(post["id"], "comments", limit: 100, filter: 'stream')
                           begin
