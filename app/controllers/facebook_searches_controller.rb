@@ -1,6 +1,6 @@
 class FacebookSearchesController < ApplicationController
   before_action :set_user
-  before_action :set_facebook_search, only: [:show, :edit, :update, :destroy, :stop]
+  before_action :set_facebook_search, only: [:show, :edit, :update, :destroy, :stop, :poll_status_count, :poll_status]
 
   # GET /facebook_searches
   # GET /facebook_searches.json
@@ -107,9 +107,27 @@ class FacebookSearchesController < ApplicationController
   
   def stop
     if @facebook_search
-      @facebook_search.update_attribute(:status, 2)
+      @facebook_search.update_attribute(:status, :finished)
       respond_to do |format|
-        format.json { render json: 'Search stopped', status: 200 }
+        format.json { render json: { 'message' => 'Search stopped' }, status: 200 }
+      end
+    end
+  end
+  
+  def poll_status_count
+    if params[:element]
+      @element = params[:element]
+      respond_to do |format|
+        format.js
+      end
+    end
+  end
+  
+  def poll_status
+    if params[:element]
+      @element = params[:element]
+      respond_to do |format|
+        format.js
       end
     end
   end

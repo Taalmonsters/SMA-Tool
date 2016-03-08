@@ -29,6 +29,8 @@ gem 'will_paginate-bootstrap'
 gem 'wtf_lang'
 gem 'sentiment_lib'
 gem 'nokogiri'
+gem 'pollable', :github => 'Taalmonsters/pollable'
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller', :platforms=>[:mri_21]

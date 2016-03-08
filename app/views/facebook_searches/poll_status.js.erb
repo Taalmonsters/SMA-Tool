@@ -1,0 +1,8 @@
+<% if @element %>
+$('td#<%= @element %>').html("<%= @facebook_search.status.to_s %>");
+<% if !@facebook_search.status.to_s.eql?('finished') %>
+if (document.getElementById("<%= @element %>")) {
+	poll($('#<%= @element %>').data('url'), $('#<%= @element %>').attr('id'));
+}
+<% end %>
+<% end %>

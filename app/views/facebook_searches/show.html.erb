@@ -1,21 +1,49 @@
+<%= link_to 'Back to Facebook Searches', user_facebook_searches_path %>
+<br>
 <div class="row">
-	<div class="col-xs-12">
-	    <ul class="list-unstyled">
-	    	<li><label>Query</label> <%= @facebook_search.query %></li>
-	    	<li><label>Status</label> <span id="status" data-status="<%= @facebook_search.status %>"><%= @facebook_search.status.eql?(:finished) ? 'Finished' : 'Running' %></span></li>
-	    	<li><label>Status count</label> <span id="tweet-count"><%= @facebook_search.facebook_statuses.size %></span></li>
-	    	<% if @facebook_search.facebook_statuses.size > 0 %>
-	    	<li><label></label> <a href="/users/<%= @user.id %>/facebook_searches/<%= @facebook_search.id %>.csv" target="_blank" class="btn-xs btn-info">Download Facebook statuses</a></li>
-	    	<% end %>
-	    	<% if @facebook_search.status == 1 %>
-	    	<li class="hidden"><label></label> <button id="stop-facebook-search" data-id="<%= @user.id %>" data-search-id="<%= @facebook_search.id %>" class="btn-xs btn-warning">Stop stream</button></li>
-	    	<% end %>
-	    </ul>
+	<div class="col-xs-12 col-sm-6">
+		<h3>Query details</h3>
+		<table>
+			<tr>
+				<th>Query</th>
+				<td><%= @facebook_search.query %></td>
+			</tr>
+      		<% if !@facebook_search.status.to_s.eql?('finished') %>
+      		<tr>
+      			<th>Status</th>
+      			<td id="fb_search_<%= @facebook_search.id %>_status" class="pollable" data-url="<%= poll_fb_search_status_url(:user_id => current_user.id, :id => @facebook_search.id) %>"><%= @facebook_search.status %></td>
+      		</tr>
+      		<tr>
+      			<th>Result count</th>
+      			<td id="fb_search_<%= @facebook_search.id %>_status_count" class="pollable" data-url="<%= poll_facebook_statuses_url(:user_id => current_user.id, :id => @facebook_search.id) %>"><%= @facebook_search.facebook_statuses.size %></td>
+      		</tr>
+      		<tr>
+      			<th></th>
+      			<td><a href="#" class="stop-facebook-search btn-xs btn-warning" data-id="<%= current_user.id %>" data-search-id="<%= @facebook_search.id %>">Stop</a></td>
+      		</tr>
+      		<% else %>
+      		<tr>
+      			<th>Status</th>
+      			<td><%= @facebook_search.status %></td>
+      		</tr>
+      		<tr>
+      			<th>Result count</th>
+      			<td><%= @facebook_search.facebook_statuses.size %></td>
+      		</tr>
+      		<% end %>
+      		<% if @facebook_search.facebook_statuses.size > 0 %>
+      		<tr>
+      			<th></th>
+      			<td><a href="/users/<%= @user.id %>/facebook_searches/<%= @facebook_search.id %>.csv" target="_blank" class="btn-xs btn-info">Download Facebook statuses</a></td>
+      		</tr>
+      		<% end %>
+		</table>
 	</div>
 </div>
-<%= link_to 'Back to Facebook Searches', user_facebook_searches_path %>
+<br>
 <div class="row">
 	<div id="facebook-statuses" class="col-xs-12">
+		<h3>Query results</h3>
 		<%= render 'facebook_statuses/index' %>
 	</div>
 </div>

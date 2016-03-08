@@ -2,7 +2,7 @@ require 'csv'
 class TwitterStreamsController < ApplicationController
   before_action :set_user
   before_action :check_tw_auth
-  before_action :set_twitter_stream, only: [:show, :edit, :update, :destroy, :stop]
+  before_action :set_twitter_stream, only: [:show, :edit, :update, :destroy, :stop, :poll_tweets, :poll_status]
 
   # GET /twitter_streams
   # GET /twitter_streams.json
@@ -109,9 +109,27 @@ class TwitterStreamsController < ApplicationController
   
   def stop
     if @twitter_stream
-      @twitter_stream.update_attribute(:status, 2)
+      @twitter_stream.update_attribute(:status, :finished)
       respond_to do |format|
-        format.json { render json: 'Stream stopped', status: 200 }
+        format.json { render json: { 'message' => 'Stream stopped' }, status: 200 }
+      end
+    end
+  end
+  
+  def poll_tweets
+    if params[:element]
+      @element = params[:element]
+      respond_to do |format|
+        format.js
+      end
+    end
+  end
+  
+  def poll_status
+    if params[:element]
+      @element = params[:element]
+      respond_to do |format|
+        format.js
       end
     end
   end

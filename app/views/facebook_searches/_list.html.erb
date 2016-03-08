@@ -13,11 +13,16 @@
     <% @facebook_searches.each do |facebook_search| %>
       <tr>
       	<td><%= facebook_search.query %></td>
+      	<% if !facebook_search.status.to_s.eql?('finished') %>
+      	<td id="fb_<%= facebook_search.id %>_count" class="pollable" data-url="<%= poll_facebook_statuses_url(:user_id => current_user.id, :id => facebook_search.id) %>"><%= facebook_search.facebook_statuses.size %></td>
+      	<td id="fb_<%= facebook_search.id %>_status" class="pollable" data-url="<%= poll_fb_search_status_url(:user_id => current_user.id, :id => facebook_search.id) %>"><%= facebook_search.status %></td>
+      	<% else %>
       	<td><%= facebook_search.facebook_statuses.size %></td>
       	<td><%= facebook_search.status %></td>
+      	<% end %>
       	<td><%= facebook_search.created_at.strftime("%Y-%m-%d %H:%M") %></td>
         <td><%= link_to 'Show', user_facebook_search_path(:id => facebook_search.id) %></td>
-        <td><a href="#" id="stop-facebook-search" data-id="<%= current_user.id %>" data-search-id="<%= facebook_search.id %>">Stop</a></td>
+        <td><a href="#" class="stop-facebook-search" data-id="<%= current_user.id %>" data-search-id="<%= facebook_search.id %>">Stop</a></td>
         <td><%= link_to 'Destroy', user_facebook_search_path(:id => facebook_search.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>

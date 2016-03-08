@@ -1,0 +1,8 @@
+<% if @element %>
+$('td#<%= @element %>').html("<%= @twitter_stream.tweets.size.to_s %>");
+<% if @twitter_stream.status.to_s.eql?('finished') %>
+if (document.getElementById("<%= @element %>")) {
+	poll($('#<%= @element %>').data('url'), $('#<%= @element %>').attr('id'));
+}
+<% end %>
+<% end %>

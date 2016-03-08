@@ -1,26 +1,57 @@
+<%= link_to 'Back to Tweet Streams', user_twitter_streams_path %>
+<br>
 <div class="row">
 	<div class="col-xs-12 col-sm-6">
-	    <ul class="list-unstyled">
-	    	<li><label>Query</label> <%= @twitter_stream.query %></li>
-	    	<li><label>Period (days)</label> <%= @twitter_stream.period %></li>
-	    	<li><label>Status</label> <span id="status" data-status="<%= @twitter_stream.status %>"><%= @twitter_stream.status.eql?(:finished) ? 'Finished' : 'Running (Expires at: '+@twitter_stream.expiration_date.to_s+')' %></span></li>
-	    	<% if @twitter_stream.status == 1 %>
-	    	<li class="hidden"><label></label> <button id="stop-stream" data-id="<%= @user.id %>" data-stream-id="<%= @twitter_stream.id %>" class="btn-xs btn-warning">Stop stream</button></li>
-	    	<% end %>
-	    </ul>
-	</div>
-	<div class="col-xs-12 col-sm-6">
-	    <ul class="list-unstyled">
-	    	<li><label>Tweet count</label> <span id="tweet-count"><%= @twitter_stream.tweets.size %></span></li>
-	    	<% if @twitter_stream.tweets.size > 0 %>
-	    	<li><label></label> <a href="/users/<%= @user.id %>/twitter_streams/<%= @twitter_stream.id %>.csv" target="_blank" class="btn-xs btn-info">Download tweets</a></li>
-	    	<% end %>
-	    </ul>
+		<h3>Query details</h3>
+		<table>
+			<tr>
+				<th>Query</th>
+				<td><%= @twitter_stream.query %></td>
+			</tr>
+			<tr>
+				<th>Period (days)</th>
+				<td><%= @twitter_stream.period %></td>
+			</tr>
+			<tr>
+				<th><%= !@twitter_stream.status.to_s.eql?('finished') ? 'Expires' : 'Expired' %></th>
+				<td><%= @twitter_stream.expiration_date.to_s %></td>
+			</tr>
+      		<% if !@twitter_stream.status.to_s.eql?('finished') %>
+      		<tr>
+      			<th>Status</th>
+      			<td id="tw_stream_<%= @twitter_stream.id %>_status" class="pollable" data-url="<%= poll_stream_status_url(:user_id => current_user.id, :id => @twitter_stream.id) %>"><%= @twitter_stream.status %></td>
+      		</tr>
+      		<tr>
+      			<th>Result count</th>
+      			<td id="tw_stream_<%= @twitter_stream.id %>_status_count" class="pollable" data-url="<%= poll_stream_tweets_url(:user_id => current_user.id, :id => @twitter_stream.id) %>"><%= @twitter_stream.tweets.size %></td>
+      		</tr>
+      		<tr>
+      			<th></th>
+      			<td><a href="#" class="stop-stream btn-xs btn-warning" data-id="<%= current_user.id %>" data-search-id="<%= @twitter_stream.id %>">Stop</a></td>
+      		</tr>
+      		<% else %>
+      		<tr>
+      			<th>Status</th>
+      			<td><%= @twitter_stream.status %></td>
+      		</tr>
+      		<tr>
+      			<th>Result count</th>
+      			<td><%= @twitter_stream.tweets.size %></td>
+      		</tr>
+      		<% end %>
+      		<% if @twitter_stream.tweets.size > 0 %>
+      		<tr>
+      			<th></th>
+      			<td><a href="/users/<%= @user.id %>/twitter_streams/<%= @twitter_stream.id %>.csv" target="_blank" class="btn-xs btn-info">Download tweets</a></td>
+      		</tr>
+      		<% end %>
+		</table>
 	</div>
 </div>
-<%= link_to 'Back to Tweet Streams', user_twitter_streams_path %>
+<br>
 <div class="row">
 	<div id="tweets" class="col-xs-12">
+		<h3>Query results</h3>
 		<%= render 'tweets/index' %>
 	</div>
 </div>
