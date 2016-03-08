@@ -11,11 +11,11 @@
       		<% if !@twitter_search.status.to_s.eql?('finished') %>
       		<tr>
       			<th>Status</th>
-      			<td id="tw_search_<%= @twitter_search.id %>_status" class="pollable" data-url="<%= poll_fb_search_status_url(:user_id => current_user.id, :id => @twitter_search.id) %>"><%= @twitter_search.status %></td>
+      			<td id="tw_search_<%= @twitter_search.id %>_status" class="pollable" data-url="<%= poll_twitter_search_status_url(:user_id => current_user.id, :id => @twitter_search.id) %>"><%= @twitter_search.status %></td>
       		</tr>
       		<tr>
       			<th>Result count</th>
-      			<td id="tw_search_<%= @twitter_search.id %>_status_count" class="pollable" data-url="<%= poll_facebook_statuses_url(:user_id => current_user.id, :id => @twitter_search.id) %>"><%= @twitter_search.tweets.size %></td>
+      			<td id="tw_search_<%= @twitter_search.id %>_status_count" class="pollable" data-url="<%= poll_search_tweets_url(:user_id => current_user.id, :id => @twitter_search.id) %>"><%= @twitter_search.tweets.size %></td>
       		</tr>
       		<tr>
       			<th></th>
