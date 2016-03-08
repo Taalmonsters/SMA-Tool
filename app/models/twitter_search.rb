@@ -32,6 +32,7 @@ class TwitterSearch < ActiveRecord::Base
         end
         begin
           terminated = TwitterSearch.is_terminated?(self.id)
+          p "*** INFO: TERMINATED = "+terminated.to_s
           response = nil
           unless terminated
             response = access_token.get(url)
@@ -65,6 +66,7 @@ class TwitterSearch < ActiveRecord::Base
             sleep(5 * User.find(self.user_id).active_twitter_threads)
           end
           if i == 0
+            p "*** TWITTER SEARCH FINISHED"
             self.update_attribute(:status, :finished)
           end
         rescue => e
