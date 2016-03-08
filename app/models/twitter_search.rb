@@ -22,7 +22,7 @@ class TwitterSearch < ActiveRecord::Base
       terminated = false
       tw_auth = TwitterAuth.where(:user_id => self.user_id).first
       access_token = prepare_access_token(tw_auth.consumer_key, tw_auth.consumer_secret, tw_auth.access_token, tw_auth.access_secret)
-      (0..8).to_a.reverse.each do |i|
+      (0..9).to_a.reverse.each do |i|
         day_total = 0
         date = (Time.now - i.days).strftime("%Y-%m-%d")
         next_date = i == 0 ? nil : (Time.now - (i - 1).days).strftime("%Y-%m-%d")
