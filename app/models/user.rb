@@ -55,7 +55,8 @@ class User < ActiveRecord::Base
   end
   
   def has_open_twitter_slots?
-    !twitter_searches.where(:status => 1).any? && !twitter_streams.where(:status => 1).any?
+    twitter_searches.where(:status => 1).size + twitter_streams.where(:status => 1).size < 2
+    # !twitter_searches.where(:status => 1).any? && !twitter_streams.where(:status => 1).any?
   end
   
   def csv_data(options = {})
