@@ -1,18 +1,39 @@
+<%= link_to 'Back to Twitter ID Searches', user_twitter_id_searches_path, :class => 'btn btn-default' %>
+<br>
 <div class="row">
-	<div class="col-xs-12">
-	    <ul class="list-unstyled">
-	    	<li><label>Query</label> <%= @twitter_id_search.query %></li>
-	    	<li><label>Status</label> <span id="status" data-status="<%= @twitter_id_search.status %>"><%= @twitter_id_search.status.eql?(:finished) ? 'Finished' : 'Running' %></span></li>
-	    	<li><label>Tweet count</label> <span id="tweet-count"><%= @twitter_id_search.tweets.size %></span></li>
-	    	<% if @twitter_id_search.tweets.size > 0 %>
-	    	<li><label></label> <a href="/users/<%= @user.id %>/twitter_id_searches/<%= @twitter_id_search.id %>.csv" target="_blank" class="btn-xs btn-info">Download tweets</a></li>
-	    	<% end %>
-	    </ul>
+	<div class="col-xs-12 col-sm-6">
+		<h3>Query details</h3>
+		<table>
+			<tr>
+				<th>Query</th>
+				<td><%= @twitter_id_search.query %></td>
+			</tr>
+      		<tr>
+      			<th>Status</th>
+      			<td><%= @twitter_id_search.status %></td>
+      		</tr>
+      		<tr>
+      			<th>Result count</th>
+      			<td><%= @twitter_id_search.tweets.size %></td>
+      		</tr>
+      		<% if @twitter_id_search.tweets.size > 0 %>
+      		<tr>
+      			<th></th>
+      			<td><a href="/users/<%= @user.id %>/twitter_id_searches/<%= @twitter_id_search.id %>.csv" target="_blank" class="btn btn-xs btn-info">Download tweets</a></td>
+      		</tr>
+      		<% end %>
+		</table>
 	</div>
 </div>
-<%= link_to 'Back to Twitter ID Searches', user_twitter_id_searches_path %>
+<br>
 <div class="row">
 	<div id="tweets" class="col-xs-12">
+		<span class="h3">
+			<div class="info-group info-group-right">
+				<div class="info">Refresh the page to show new results.</div>
+				<div class="content">Query results</div>
+			</div>
+		</span>
 		<%= render 'tweets/full_index' %>
 	</div>
 </div>

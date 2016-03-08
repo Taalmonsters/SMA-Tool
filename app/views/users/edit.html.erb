@@ -1,4 +1,4 @@
-<%= link_to 'Back', :back %>
+<%= link_to 'Back', :root %>
 <div class="row">
 	<div class="col-xs-10 col-xs-offset-1">
 		<h3>Edit profile</h3>
@@ -20,7 +20,20 @@
 		<div class="row">
 			<div class="col-xs-12 col-sm-6">
 				<fieldset>
-					<h3>Twitter authorization</h3>
+					<h3>Twitter authentication</h3>
+					<div class="panel panel-info">
+						<div class="panel-body">
+							<ul>
+								<li>Go to <a href="http://apps.twitter.com" target="_blank">Twitter Apps</a> and login to your Twitter account if you haven't already.</li>
+								<li>Click 'Create New App'.</li>
+								<li>Give your app a name and description, and enter 'http://sma.taalmonsters.nl' as the Website. Leave the Callback URL empty.</li>
+								<li>Click 'Create application'.</li>
+								<li>Click 'manage keys and access tokens'.</li>
+								<li>Click 'generate access token'.</li>
+								<li>Copy the data to this form. Make sure not to copy any whitespace!</li>
+							</ul>
+						</div>
+					</div>
 					<% if !current_user.twitter_auth.blank? %>
 						<%= f.fields_for :twitter_auth do |tw| %>
 						<div class="form-group">

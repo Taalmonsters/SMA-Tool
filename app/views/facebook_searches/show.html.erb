@@ -1,4 +1,4 @@
-<%= link_to 'Back to Facebook Searches', user_facebook_searches_path %>
+<%= link_to 'Back to Facebook Searches', user_facebook_searches_path, :class => 'btn btn-default' %>
 <br>
 <div class="row">
 	<div class="col-xs-12 col-sm-6">
@@ -34,7 +34,7 @@
       		<% if @facebook_search.facebook_statuses.size > 0 %>
       		<tr>
       			<th></th>
-      			<td><a href="/users/<%= @user.id %>/facebook_searches/<%= @facebook_search.id %>.csv" target="_blank" class="btn-xs btn-info">Download Facebook statuses</a></td>
+      			<td><a href="/users/<%= @user.id %>/facebook_searches/<%= @facebook_search.id %>.csv" target="_blank" class="btn btn-xs btn-info">Download Facebook statuses</a></td>
       		</tr>
       		<% end %>
 		</table>
@@ -43,7 +43,12 @@
 <br>
 <div class="row">
 	<div id="facebook-statuses" class="col-xs-12">
-		<h3>Query results</h3>
+		<span class="h3">
+			<div class="info-group info-group-right">
+				<div class="info">Refresh the page to show new results.</div>
+				<div class="content">Query results</div>
+			</div>
+		</span>
 		<%= render 'facebook_statuses/index' %>
 	</div>
 </div>

@@ -9,6 +9,7 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
+ *= require info_boxes
  *= require_tree .
 */
 
@@ -136,4 +137,12 @@ ul > li > label {
 mark {
   background-color: #87FAFF !important;
   color: black;
+}
+
+span.h3 {
+  font-size: 1.7em;
+  width: auto;
+  > div.info-group {
+    width: 175px;
+  }
 }

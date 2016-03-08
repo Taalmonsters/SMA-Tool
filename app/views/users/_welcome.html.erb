@@ -1,0 +1,23 @@
+<% if !@user.has_valid_twitter_auth? %>
+<div class="panel panel-danger">
+	<div class="panel-body">
+		<p>Please setup Twitter authentication on your <%= link_to 'profile', edit_user_path(:id => current_user.id) %>. See also <a href="https://www.slickremix.com/docs/how-to-get-api-keys-and-tokens-for-twitter/" target="_blank">this website</a>.</p>
+	</div>
+</div>
+<% end %>
+<div class="row">
+	<div class="col-xs-12">
+		<p>
+			What do you want to do?
+			<ul>
+				<li>I want to track what is said on <%= link_to 'Twitter about something from now until some point in the future', user_twitter_streams_path(@user.id) %>.</li>
+				<li>I want to lookup what has been said on <%= link_to 'Twitter about something in the past week', user_twitter_searches_path(@user.id) %>.</li>
+				<li>I have a list of tweet IDs and want to <%= link_to 'lookup the actual tweets', user_twitter_id_searches_path(@user.id) %>.</li>
+				<li>I want to lookup what has been said on <%= link_to 'Facebook about something in the past few weeks', user_facebook_searches_path(@user.id) %>.</li>
+			</ul>
+		</p>
+		<p></p>
+		<p></p>
+		<p></p>
+	</div>
+</div>

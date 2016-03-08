@@ -1,3 +1,10 @@
+<div class="panel panel-info">
+	<div class="panel-body">
+		<p>This interface allows you to search for Facebook status updates and comments. All retrievable updates and comments posted on pages whose names match your query will be stored.</p>
+		<p>If you have any stored Facebook Searches they will be listed here.</p>
+		<p><b>NB:</b> You are allowed to run only 1 Facebook Search at a time.</p>
+	</div>
+</div>
 <% if current_user.facebook_searches.size > 0 %>
 <div id="facebook-search-list">
 	<%= render 'facebook_searches/list' %>
@@ -5,7 +12,8 @@
 <br>
 <% end %>
 <% if current_user.has_open_facebook_slots? %>
-<%= link_to 'New Facebook search', new_user_facebook_search_path %>
+<%= link_to 'New Facebook search', new_user_facebook_search_path, :class => 'btn btn-info' %><br><br>
 <% else %>
 <p>Please wait until your previous search is finished before adding a new one.</p>
 <% end %>
+<%= link_to 'Back', :root, :class => 'btn btn-default' %>

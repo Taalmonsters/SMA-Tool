@@ -1,3 +1,10 @@
+<div class="panel panel-info">
+	<div class="panel-body">
+		<p>This interface allows you to track tweets for a set period of time (1 to 14 days). All public tweets matching your query during this period will be stored.</p>
+		<p>If you have any stored Twitter Streams they will be listed here.</p>
+		<p><b>NB:</b> You are allowed to run only 2 Twitter Stream or Search queries at a time. If you do not see the 'New' button, wait for one of your other queries to finish.</p>
+	</div>
+</div>
 <% if current_user.twitter_streams.size > 0 %>
 <div id="twitter-stream-list">
 	<%= render 'twitter_streams/list' %>
@@ -5,7 +12,8 @@
 <br>
 <% end %>
 <% if current_user.has_open_twitter_slots? %>
-<%= link_to 'New Tweet stream', new_user_twitter_stream_path %>
+<%= link_to 'New Tweet stream', new_user_twitter_stream_path, :class => 'btn btn-info' %><br><br>
 <% else %>
 <p>Please wait until your previous Twitter searches or streams have finished before adding a new one.</p>
 <% end %>
+<%= link_to 'Back', :root, :class => 'btn btn-default' %>

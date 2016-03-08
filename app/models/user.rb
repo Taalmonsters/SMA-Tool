@@ -46,6 +46,10 @@ class User < ActiveRecord::Base
     return false
   end
   
+  def has_valid_twitter_auth?
+    !twitter_auth.blank? && !twitter_auth.access_token.blank? && !twitter_auth.access_secret.blank? && !twitter_auth.consumer_key.blank? && !twitter_auth.consumer_secret.blank?
+  end
+  
   def has_open_facebook_slots?
     !facebook_searches.where(:status => 1).any?
   end

@@ -15,12 +15,11 @@
 		  
 		    <div class="form-group">
 		      <%= f.label :query %>
-		      <p>Enter max. 100 tweet IDs, separated by commas (no spaces!).</p>
 		      <%= f.text_area :query, class: 'form-control', cols: 40, rows: 10 %>
 		    </div>
 		
 		  <div class="actions">
-		    <%= f.submit "Submit", :class => "btn btn-default" %>
+		    <%= f.submit "Create new Twitter ID Search", :class => "btn btn-info" %>
 		  </div>
 		<% end %>
 	</div>

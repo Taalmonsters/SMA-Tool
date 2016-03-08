@@ -1,4 +1,4 @@
-<%= link_to 'Back to Tweet Streams', user_twitter_streams_path %>
+<%= link_to 'Back to Tweet Streams', user_twitter_streams_path, :class => 'btn btn-default' %>
 <br>
 <div class="row">
 	<div class="col-xs-12 col-sm-6">
@@ -42,7 +42,7 @@
       		<% if @twitter_stream.tweets.size > 0 %>
       		<tr>
       			<th></th>
-      			<td><a href="/users/<%= @user.id %>/twitter_streams/<%= @twitter_stream.id %>.csv" target="_blank" class="btn-xs btn-info">Download tweets</a></td>
+      			<td><a href="/users/<%= @user.id %>/twitter_streams/<%= @twitter_stream.id %>.csv" target="_blank" class="btn btn-xs btn-info">Download tweets</a></td>
       		</tr>
       		<% end %>
 		</table>
@@ -51,7 +51,12 @@
 <br>
 <div class="row">
 	<div id="tweets" class="col-xs-12">
-		<h3>Query results</h3>
+		<span class="h3">
+			<div class="info-group info-group-right">
+				<div class="info">Refresh the page to show new results.</div>
+				<div class="content">Query results</div>
+			</div>
+		</span>
 		<%= render 'tweets/index' %>
 	</div>
 </div>

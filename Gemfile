@@ -30,6 +30,7 @@ gem 'wtf_lang'
 gem 'sentiment_lib'
 gem 'nokogiri'
 gem 'pollable', :github => 'Taalmonsters/pollable'
+gem 'info_boxes', :github => 'Taalmonsters/info_boxes'
 
 group :development do
   gem 'better_errors'

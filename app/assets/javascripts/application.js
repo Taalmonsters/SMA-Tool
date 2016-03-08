@@ -15,6 +15,7 @@
 //= require turbolinks
 //= require bootstrap-sprockets
 //= require pollable
+//= require info_boxes
 //= require_tree .
 
 var ready;

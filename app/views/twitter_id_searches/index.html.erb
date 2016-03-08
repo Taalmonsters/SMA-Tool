@@ -1,7 +1,14 @@
+<div class="panel panel-info">
+	<div class="panel-body">
+		<p>This interface allows you to search for tweets by ID. Tweets IDs can be retrieved from Twitter or through <a href="http://twiqs.nl" target="_blank">Twiqs</a>.</p>
+		<p>If you have any stored Twitter ID Searches they will be listed here.</p>
+	</div>
+</div>
 <% if current_user.twitter_id_searches.size > 0 %>
 <div id="twitter-id-search-list">
 	<%= render 'twitter_id_searches/list' %>
 </div>
 <br>
 <% end %>
-<%= link_to 'New Twitter ID Search', new_user_twitter_id_search_path %>
+<%= link_to 'New Twitter ID Search', new_user_twitter_id_search_path, :class => 'btn btn-info' %><br><br>
+<%= link_to 'Back', :root, :class => 'btn btn-default' %>
