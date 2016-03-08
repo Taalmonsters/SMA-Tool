@@ -24,8 +24,12 @@ class TwitterSearch < ActiveRecord::Base
       access_token = prepare_access_token(tw_auth.consumer_key, tw_auth.consumer_secret, tw_auth.access_token, tw_auth.access_secret)
       (0..8).to_a.reverse.each do |i|
         date = (Time.now - i.days).strftime("%Y-%m-%d")
+        next_date = i == 0 ? nil : (Time.now - (i - 1).days).strftime("%Y-%m-%d")
         p "*** DATE: "+date.to_s
-        url = "https://api.twitter.com/1.1/search/tweets.json?result_type=mixed&until="+date+"&count=100&q="+URI::encode(self.query.gsub(/[\n ]+/,""))
+        url = "https://api.twitter.com/1.1/search/tweets.json?count=100&q="+URI::encode(self.query)+"&result_type=mixed&since="+date.to_s
+        if next_date != nil
+          url = url + '&until='+next_date.to_s
+        end
         begin
           terminated = TwitterSearch.is_terminated?(self.id)
           response = nil
@@ -33,7 +37,7 @@ class TwitterSearch < ActiveRecord::Base
             response = access_token.get(url)
             response = JSON.parse(response.body)
             if response.has_key?("errors")
-              p "*** ERROR: "+response["errors"][0]["message"]
+              p "*** ERROR "+response["errors"][0]["code"].to_s+": "+response["errors"][0]["message"]
               if response["errors"][0]["code"] == 88
                 sleep(900)
                 response = access_token.get(url)
