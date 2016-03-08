@@ -39,6 +39,7 @@ class TwitterSearch < ActiveRecord::Base
             if response.has_key?("errors")
               p "*** ERROR "+response["errors"][0]["code"].to_s+": "+response["errors"][0]["message"]
               if response["errors"][0]["code"] == 88
+                p "*** SLEEPING..."
                 sleep(900)
                 response = access_token.get(url)
                 response = JSON.parse(response.body)
@@ -63,9 +64,9 @@ class TwitterSearch < ActiveRecord::Base
             end
             sleep(5 * User.find(self.user_id).active_twitter_threads)
           end
-        # rescue => e
-          # p e.message
-          # p e.backtrace.join("\n")
+        rescue => e
+          p e.message
+          p e.backtrace.join("\n")
         end while url != nil && !terminated
       end
       self.update_attribute(:status, :finished)
