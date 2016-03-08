@@ -23,6 +23,7 @@ class TwitterSearch < ActiveRecord::Base
       tw_auth = TwitterAuth.where(:user_id => self.user_id).first
       access_token = prepare_access_token(tw_auth.consumer_key, tw_auth.consumer_secret, tw_auth.access_token, tw_auth.access_secret)
       (0..8).to_a.reverse.each do |i|
+        day_total = 0
         date = (Time.now - i.days).strftime("%Y-%m-%d")
         next_date = i == 0 ? nil : (Time.now - (i - 1).days).strftime("%Y-%m-%d")
         p "*** DATE: "+date.to_s
@@ -55,7 +56,11 @@ class TwitterSearch < ActiveRecord::Base
               terminated = TwitterSearch.is_terminated?(self.id)
               tweet = Tweet.from_json(status)
               if !tweet.blank? && !self.tweets.include?(tweet) && !terminated
+                day_total = day_total + 1
                 self.tweets << tweet
+                if day_total == 1000
+                  break
+                end
               end
             end
             if terminated || !response["search_metadata"].has_key?("next_results") || response["search_metadata"]["next_results"].blank?
