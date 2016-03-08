@@ -63,6 +63,9 @@ class TwitterSearch < ActiveRecord::Base
             end
             sleep(5 * User.find(self.user_id).active_twitter_threads)
           end
+        rescue => e
+          p e.message
+          p e.backtrace.join("\n")
         end while url != nil && !terminated
       end
       self.update_attribute(:status, :finished)
