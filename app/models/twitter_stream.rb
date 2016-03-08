@@ -4,6 +4,7 @@ class TwitterStream < ActiveRecord::Base
   after_initialize :set_default_status, :if => :new_record?
   belongs_to :user
   has_and_belongs_to_many :tweets
+  validates :query, presence: true
 
   def set_default_status
     self.status ||= :waiting

@@ -20,12 +20,12 @@ class FacebookSearchesController < ApplicationController
   # GET /facebook_searches/1
   # GET /facebook_searches/1.json
   def show
+    @page_title = 'facebook_search'
+    @sub_title = 'facebook search'
     if @facebook_search
       page = params[:page] || 1
       number = params[:number] || 10
       @facebook_statuses = @facebook_search.facebook_statuses.paginate(:page => page, :per_page => number)
-      @page_title = 'facebook_search'
-      @sub_title = 'facebook search'
       respond_to do |format|
         format.html
         format.csv { render text: @facebook_search.facebook_statuses.to_csv(col_sep: "\t") }
@@ -40,11 +40,11 @@ class FacebookSearchesController < ApplicationController
 
   # GET /facebook_searches/new
   def new
+    @page_title = 'facebook_search'
+    @sub_title = 'new facebook search'
     if @user && !@error
       @facebook_search = FacebookSearch.new
       @facebook_search.user_id = @user.id
-      @page_title = 'facebook_search'
-      @sub_title = 'new facebook search'
     else
       if !@error
         @error = 'No user'
