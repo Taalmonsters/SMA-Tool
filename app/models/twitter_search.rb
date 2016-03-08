@@ -63,7 +63,7 @@ class TwitterSearch < ActiveRecord::Base
                 end
               end
             end
-            if terminated || !response["search_metadata"].has_key?("next_results") || response["search_metadata"]["next_results"].blank?
+            if day_total >= 1000 || terminated || !response["search_metadata"].has_key?("next_results") || response["search_metadata"]["next_results"].blank?
               url = nil
             else
               url = "https://api.twitter.com/1.1/search/tweets.json"+response["search_metadata"]["next_results"]
