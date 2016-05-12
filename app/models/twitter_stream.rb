@@ -44,7 +44,6 @@ class TwitterStream < ActiveRecord::Base
           end
         end
         if terminated || self.is_expired
-          p "*** TERMINATING TWEET STREAM "+self.id.to_s
           client.stop
           self.update_attribute(:status, :finished)
         else

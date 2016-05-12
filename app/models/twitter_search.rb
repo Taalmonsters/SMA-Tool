@@ -17,7 +17,6 @@ class TwitterSearch < ActiveRecord::Base
   
   def get_tweets
     self.update_attribute(:status, :running)
-    p "*** GET TWEETS"
     Thread.new do
       terminated = false
       tw_auth = TwitterAuth.where(:user_id => self.user_id).first
@@ -26,14 +25,12 @@ class TwitterSearch < ActiveRecord::Base
         day_total = 0
         date = (Time.now - i.days).strftime("%Y-%m-%d")
         next_date = i == 0 ? nil : (Time.now - (i - 1).days).strftime("%Y-%m-%d")
-        p "*** DATE: "+date.to_s
         url = "https://api.twitter.com/1.1/search/tweets.json?count=100&q="+URI::encode(self.query)+"&result_type=mixed&since="+date.to_s
         if next_date != nil
           url = url + '&until='+next_date.to_s
         end
         begin
           terminated = TwitterSearch.is_terminated?(self.id)
-          p "*** INFO: TERMINATED = "+terminated.to_s
           response = nil
           unless terminated
             response = access_token.get(url)
@@ -71,7 +68,6 @@ class TwitterSearch < ActiveRecord::Base
             sleep(5 * User.find(self.user_id).active_twitter_threads)
           end
           if i == 0
-            p "*** TWITTER SEARCH FINISHED"
             self.update_attribute(:status, :finished)
           end
         rescue => e

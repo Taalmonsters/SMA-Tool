@@ -16,7 +16,6 @@ class FacebookSearch < ActiveRecord::Base
   end
   
   def get_statuses(facebook)
-    p "*** GET STATUSES"
     self.update_attribute(:status, :running)
     Thread.new do
       page_collection = facebook.search(self.query, {:type => "page", :limit => 1000})
