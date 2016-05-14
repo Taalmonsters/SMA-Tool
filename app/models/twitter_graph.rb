@@ -74,7 +74,7 @@ class TwitterGraph < ActiveRecord::Base
     if followers
       followers.each do |follower|
         nodes << follower unless nodes.include?(follower)
-        edge = [follower, main_user]
+        edge = [follower, node]
         unless edges.include?(edge)
           edges << edge
         end
