@@ -58,29 +58,34 @@ class TwitterGraph < ActiveRecord::Base
   
   def get_uid_data(node, edges, access_token, set)
     nodes = []
-    friends = get_friends_list(node["id"].to_s, access_token)
-    sleep(5 * User.find(self.user_id).active_twitter_threads)
+    friends = nil
+    followers = nil
+    if set.size > 0
+      friends = get_mutual_friends_list(node["id"].to_s, set, access_token)
+      sleep(5 * User.find(self.user_id).active_twitter_threads)
+      followers = get_mutual_followers_list(node["id"].to_s, set, access_token)
+      sleep(5 * User.find(self.user_id).active_twitter_threads)
+    else
+      friends = get_friends_list(node["id"].to_s, access_token)
+      sleep(5 * User.find(self.user_id).active_twitter_threads)
+      followers = get_followers_list(node["id"].to_s, access_token)
+      sleep(5 * User.find(self.user_id).active_twitter_threads)
+    end
     if friends
       friends.each do |friend|
-        if set.size == 0 || set.include?(friend)
-          nodes << friend unless nodes.include?(friend)
-          edge = [node, friend]
-          unless edges.include?(edge)
-            edges << edge
-          end
+        nodes << friend unless nodes.include?(friend)
+        edge = [node, friend]
+        unless edges.include?(edge)
+          edges << edge
         end
       end
     end
-    followers = get_followers_list(node["id"].to_s, access_token)
-    sleep(5 * User.find(self.user_id).active_twitter_threads)
     if followers
       followers.each do |follower|
-        if set.size == 0 || set.include?(follower)
-          nodes << follower unless nodes.include?(follower)
-          edge = [follower, node]
-          unless edges.include?(edge)
-            edges << edge
-          end
+        nodes << follower unless nodes.include?(follower)
+        edge = [follower, node]
+        unless edges.include?(edge)
+          edges << edge
         end
       end
     end
@@ -105,6 +110,40 @@ class TwitterGraph < ActiveRecord::Base
     response = JSON.parse(response.body)
     return nil if response.has_key?("errors")
     response["users"]
+  end
+  
+  def get_mutual_friends_list(uid, set, access_token)
+    return nil if terminated
+    friends = []
+    key = get_key(uid).sub(/user_/,"")
+    ids = set.map{|x| x["id"].to_s }.join(",")
+    url = "https://api.twitter.com/1.1/friendships/show.json?source_"+key+"="+uid+"&target_id="+ids
+    response = access_token.get(url)
+    response = JSON.parse(response.body)
+    return nil if response.has_key?("errors")
+    response["relationships"].each do |rel|
+      if rel["target"]["followed_by"].to_s.eql?("true")
+        friends << rel["target"] unless friends.include?(rel["target"])
+      end
+    end
+    friends
+  end
+  
+  def get_mutual_followers_list(uid, set, access_token)
+    return nil if terminated
+    followers = []
+    key = get_key(uid).sub(/user_/,"")
+    ids = set.map{|x| x["id"].to_s }.join(",")
+    url = "https://api.twitter.com/1.1/friendships/show.json?source_"+key+"="+uid+"&target_id="+ids
+    response = access_token.get(url)
+    response = JSON.parse(response.body)
+    return nil if response.has_key?("errors")
+    response["relationships"].each do |rel|
+      if rel["target"]["following"].to_s.eql?("true")
+        followers << rel["target"] unless followers.include?(rel["target"])
+      end
+    end
+    followers
   end
   
   def get_user(uid, access_token)
