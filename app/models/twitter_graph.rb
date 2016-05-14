@@ -3,7 +3,6 @@ class TwitterGraph < ActiveRecord::Base
   enum status: [:waiting, :running, :finished]
   after_initialize :set_default_status, :if => :new_record?
   belongs_to :user
-  has_and_belongs_to_many :tweets
   validates :query, presence: true
   before_destroy :delete_output
 
