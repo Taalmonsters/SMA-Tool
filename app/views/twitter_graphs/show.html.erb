@@ -23,7 +23,7 @@
       			<td><%= @twitter_graph.status %></td>
       		</tr>
       		<% end %>
-      		<% if @twitter_graph.output && File.exists(@twitter_graph.output) %>
+      		<% if @twitter_graph.output && File.exists?(@twitter_graph.output) %>
       		<tr>
       			<th></th>
       			<td><a href="/users/<%= @user.id %>/twitter_graphs/<%= @twitter_graph.id %>.csv" target="_blank" class="btn btn-xs btn-info">Download graph</a></td>
