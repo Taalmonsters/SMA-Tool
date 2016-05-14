@@ -9,12 +9,14 @@ Rails.application.routes.draw do
   resources :users do
     resources :twitter_streams
     resources :twitter_searches
+    resources :twitter_graphs
     resources :twitter_id_searches
     resources :facebook_searches
   end
   
   post '/users/:user_id/twitter_streams/:id/stop' => 'twitter_streams#stop'
   post '/users/:user_id/twitter_searches/:id/stop' => 'twitter_searches#stop'
+  post '/users/:user_id/twitter_graphs/:id/stop' => 'twitter_graphs#stop'
   post '/users/:user_id/facebook_searches/:id/stop' => 'facebook_searches#stop'
   
   get '/users/:user_id/twitter_streams/:id/tweets/poll' => 'twitter_streams#poll_tweets', :as => :poll_stream_tweets
@@ -22,6 +24,8 @@ Rails.application.routes.draw do
   
   get '/users/:user_id/twitter_searches/:id/tweets/poll' => 'twitter_searches#poll_tweets', :as => :poll_search_tweets
   get '/users/:user_id/twitter_searches/:id/poll' => 'twitter_searches#poll_status', :as => :poll_twitter_search_status
+  
+  get '/users/:user_id/twitter_graphs/:id/poll' => 'twitter_graphs#poll_status', :as => :poll_twitter_graph_status
   
   get '/users/:user_id/facebook_searches/:id/facebook_statuses/poll' => 'facebook_searches#poll_status_count', :as => :poll_facebook_statuses
   get '/users/:user_id/facebook_searches/:id/poll' => 'facebook_searches#poll_status', :as => :poll_fb_search_status

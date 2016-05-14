@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   has_one :twitter_auth
   has_many :twitter_streams
   has_many :twitter_searches
+  has_many :twitter_graphs
   has_many :twitter_id_searches
   has_many :facebook_searches
   accepts_nested_attributes_for :twitter_auth, allow_destroy: true
@@ -35,7 +36,7 @@ class User < ActiveRecord::Base
   end
   
   def active_twitter_threads
-    twitter_streams.where(:status => 1).size + twitter_searches.where(:status => 1).size + twitter_id_searches.where(:status => 1).size
+    twitter_streams.where(:status => 1).size + twitter_searches.where(:status => 1).size + twitter_graphs.where(:status => 1).size + twitter_id_searches.where(:status => 1).size
   end
   
   def has_data?
@@ -54,8 +55,7 @@ class User < ActiveRecord::Base
   end
   
   def has_open_twitter_slots?
-    twitter_searches.where(:status => 1).size + twitter_streams.where(:status => 1).size < 2
-    # !twitter_searches.where(:status => 1).any? && !twitter_streams.where(:status => 1).any?
+    twitter_searches.where(:status => 1).size + twitter_streams.where(:status => 1).size + twitter_graphs.where(:status => 1).size < 2
   end
   
   def csv_data(options = {})

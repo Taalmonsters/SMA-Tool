@@ -1,0 +1,28 @@
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<%= form_for(@twitter_graph, :url => user_twitter_graphs_path) do |f| %>
+		<% if @twitter_graph.errors.any? %>
+		<div id="error_explanation">
+			<h2><%= pluralize(@twitter_graph.errors.count, "error") %> prohibited this twitter_graph from being saved:</h2>
+
+			<ul>
+				<% @twitter_graph.errors.full_messages.each do |message| %>
+				<li>
+					<%= message %>
+				</li>
+				<% end %>
+			</ul>
+		</div>
+		<% end %>
+
+		<div class="form-group">
+			<%= f.label :query %>
+			<%= f.text_field :query, class: 'form-control' %>
+		</div>
+
+		<div class="actions">
+			<%= f.submit "Create new Twitter Graph", :class => 'btn btn-info' %>
+		</div>
+		<% end %>
+	</div>
+</div>

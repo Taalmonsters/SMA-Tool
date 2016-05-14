@@ -1,0 +1,35 @@
+<%= link_to 'Back to Twitter Graphs', user_twitter_graphs_path, :class => 'btn btn-default' %>
+<br>
+<div class="row">
+	<div class="col-xs-12 col-sm-6">
+		<h3>Query details</h3>
+		<table>
+			<tr>
+				<th>Query</th>
+				<td><%= @twitter_graph.query %></td>
+			</tr>
+      		<% if !@twitter_graph.status.to_s.eql?('finished') %>
+      		<tr>
+      			<th>Status</th>
+      			<td id="tw_graph_<%= @twitter_graph.id %>_status" class="pollable" data-url="<%= poll_twitter_graph_status_url(:user_id => current_user.id, :id => @twitter_graph.id) %>"><%= @twitter_graph.status %></td>
+      		</tr>
+      		<tr>
+      			<th></th>
+      			<td><a href="#" class="stop-twitter-graph btn-xs btn-warning" data-id="<%= current_user.id %>" data-graph-id="<%= @twitter_graph.id %>">Stop</a></td>
+      		</tr>
+      		<% else %>
+      		<tr>
+      			<th>Status</th>
+      			<td><%= @twitter_graph.status %></td>
+      		</tr>
+      		<% end %>
+      		<% if @twitter_graph.output && File.exists(@twitter_graph.output) %>
+      		<tr>
+      			<th></th>
+      			<td><a href="/users/<%= @user.id %>/twitter_graphs/<%= @twitter_graph.id %>.csv" target="_blank" class="btn btn-xs btn-info">Download graph</a></td>
+      		</tr>
+      		<% end %>
+		</table>
+	</div>
+</div>
+<br>

@@ -1,0 +1,19 @@
+<div class="panel panel-info">
+	<div class="panel-body">
+		<p>This interface allows you to recreate the social network of a Twitter user account.</p>
+		<p>If you have any stored Twitter Graphs they will be listed here.</p>
+		<p><b>NB:</b> You are allowed to run only 2 Twitter Stream, Search or Graph queries at a time. If you do not see the 'New' button, wait for one of your other queries to finish.</p>
+	</div>
+</div>
+<% if current_user.twitter_graphs.size > 0 %>
+<div id="twitter-graph-list">
+	<%= render 'twitter_graphs/list' %>
+</div>
+<br>
+<% end %>
+<% if current_user.has_open_twitter_slots? %>
+<%= link_to 'New Twitter Graph', new_user_twitter_graph_path, :class => 'btn btn-info' %><br><br>
+<% else %>
+<p>Please wait until your previous Twitter searches, streams or graphs have finished before adding a new one.</p>
+<% end %>
+<%= link_to 'Back', :root, :class => 'btn btn-default' %>

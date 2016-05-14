@@ -1,4 +1,7 @@
 <ul class="list-unstyled menu">
+	<% if @user.admin? %>
+	<li class="menu-item <%= "active" if @page_title && @page_title.eql?('twitter_graph') %>"><%= link_to 'Twitter Graph for user', user_twitter_graphs_path(@user.id) %></li>
+	<% end %>
 	<li class="menu-item <%= "active" if @page_title && @page_title.eql?('twitter_stream') %>"><%= link_to 'Twitter Stream API', user_twitter_streams_path(@user.id) %></li>
 	<li class="menu-item <%= "active" if @page_title && @page_title.eql?('twitter_search') %>"><%= link_to 'Twitter Search by Keyword', user_twitter_searches_path(@user.id) %></li>
 	<li class="menu-item <%= "active" if @page_title && @page_title.eql?('twitter_id_search') %>"><%= link_to 'Twitter Search by ID', user_twitter_id_searches_path(@user.id) %></li>

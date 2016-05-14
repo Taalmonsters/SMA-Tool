@@ -35,6 +35,14 @@ $(document).on('click', '.stop-stream', function(e) {
 	callServer('/users/'+id+'/twitter_streams/'+stream_id+'/stop', 'POST', {}, null, null);
 });
 
+$(document).on('click', '.stop-twitter-graph', function(e) {
+	e.preventDefault();
+	e.stopPropagation();
+	var id = $(this).data('id');
+	var graph_id = $(this).data('graph-id');
+	callServer('/users/'+id+'/twitter_graphs/'+graph_id+'/stop', 'POST', {}, null, null);
+});
+
 $(document).on('click', '.stop-twitter-search', function(e) {
 	e.preventDefault();
 	e.stopPropagation();
