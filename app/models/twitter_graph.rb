@@ -16,7 +16,7 @@ class TwitterGraph < ActiveRecord::Base
   end
   
   def delete_output
-    if self.output && File.exists(self.output)
+    if self.output && File.exists?(self.output)
       FileUtils.rm(self.output)
     end
   end
