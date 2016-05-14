@@ -32,21 +32,23 @@ class TwitterGraph < ActiveRecord::Base
         tw_auth = TwitterAuth.where(:user_id => self.user_id).first
         access_token = prepare_access_token(tw_auth.consumer_key, tw_auth.consumer_secret, tw_auth.access_token, tw_auth.access_secret)
         main_user = get_user(self.query, access_token)
-        sleep(5 * User.find(self.user_id).active_twitter_threads)
         edges = []
         if main_user
+          sleep(5 * User.find(self.user_id).active_twitter_threads)
           nodes, edges = get_uid_data(main_user, edges, access_token, [])
           nodes.each do |node|
             n, edges = get_uid_data(node, edges, access_token, nodes + [main_user])
           end
-        end
-        file = Rails.root.join("data", "twitter_graph_"+self.id.to_s+".csv")
-        File.open(file, "w") do |f|
-          edges.each do |edge|
-            f.write(edge[0]["screen_name"]+","+edge[1]["screen_name"]+"\n")
+          file = Rails.root.join("data", "twitter_graph_"+self.id.to_s+".csv")
+          File.open(file, "w") do |f|
+            edges.each do |edge|
+              f.write(edge[0]["screen_name"]+","+edge[1]["screen_name"]+"\n")
+            end
           end
+          self.update_attribute(:output, file)
+        else
+          logger.warn "User not found: "+self.query
         end
-        self.update_attribute(:output, file)
         self.update_attribute(:status, :finished)
       rescue => e
         p e.message
@@ -98,7 +100,10 @@ class TwitterGraph < ActiveRecord::Base
     url = "https://api.twitter.com/1.1/followers/list.json?"+key+"="+uid+"&skip_status=true&include_user_entities=false"
     response = access_token.get(url)
     response = JSON.parse(response.body)
-    return nil if response.has_key?("errors")
+    if response.has_key?("errors")
+      logger.error response["errors"]
+      return nil
+    end
     response["users"]
   end
   
@@ -108,7 +113,10 @@ class TwitterGraph < ActiveRecord::Base
     url = "https://api.twitter.com/1.1/friends/list.json?"+key+"="+uid+"&skip_status=true&include_user_entities=false"
     response = access_token.get(url)
     response = JSON.parse(response.body)
-    return nil if response.has_key?("errors")
+    if response.has_key?("errors")
+      logger.error response["errors"]
+      return nil
+    end
     response["users"]
   end
   
@@ -152,7 +160,10 @@ class TwitterGraph < ActiveRecord::Base
     url = "https://api.twitter.com/1.1/users/show.json?"+key+"="+uid+"&include_entities=false"
     response = access_token.get(url)
     response = JSON.parse(response.body)
-    return nil if response.has_key?("errors")
+    if response.has_key?("errors")
+      logger.error response["errors"]
+      return nil
+    end
     response
   end
   
