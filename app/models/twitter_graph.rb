@@ -97,7 +97,7 @@ class TwitterGraph < ActiveRecord::Base
   def get_followers_list(uid, access_token)
     return nil if terminated
     key = get_key(uid)
-    url = "https://api.twitter.com/1.1/followers/list.json?"+key+"="+uid+"&skip_status=true&include_user_entities=false"
+    url = "https://api.twitter.com/1.1/followers/list.json?"+key+"="+uid+"&skip_status=true&include_user_entities=false&count=200"
     response = access_token.get(url)
     response = JSON.parse(response.body)
     if response.has_key?("errors")
@@ -110,7 +110,7 @@ class TwitterGraph < ActiveRecord::Base
   def get_friends_list(uid, access_token)
     return nil if terminated
     key = get_key(uid)
-    url = "https://api.twitter.com/1.1/friends/list.json?"+key+"="+uid+"&skip_status=true&include_user_entities=false"
+    url = "https://api.twitter.com/1.1/friends/list.json?"+key+"="+uid+"&skip_status=true&include_user_entities=false&count=200"
     response = access_token.get(url)
     response = JSON.parse(response.body)
     if response.has_key?("errors")
