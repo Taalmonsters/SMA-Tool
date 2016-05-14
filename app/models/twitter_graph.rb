@@ -35,7 +35,7 @@ class TwitterGraph < ActiveRecord::Base
         sleep(5 * User.find(self.user_id).active_twitter_threads)
         edges = []
         if main_user
-          nodes, edges = get_uid_data(uid, edges, access_token)
+          nodes, edges = get_uid_data(main_user["id"], edges, access_token)
           nodes.each do |node|
             n, edges = get_uid_data(node["id"], edges, access_token)
           end
