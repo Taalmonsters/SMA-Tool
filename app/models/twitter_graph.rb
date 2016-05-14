@@ -35,9 +35,9 @@ class TwitterGraph < ActiveRecord::Base
         sleep(5 * User.find(self.user_id).active_twitter_threads)
         edges = []
         if main_user
-          nodes, edges = get_uid_data(main_user["id"], edges, access_token)
+          nodes, edges = get_uid_data(main_user, edges, access_token)
           nodes.each do |node|
-            n, edges = get_uid_data(node["id"], edges, access_token)
+            n, edges = get_uid_data(node, edges, access_token)
           end
         end
         file = Rails.root.join("data", "twitter_graph_"+self.id.to_s+".csv")
@@ -56,20 +56,20 @@ class TwitterGraph < ActiveRecord::Base
     end
   end
   
-  def get_uid_data(uid, edges, access_token)
+  def get_uid_data(node, edges, access_token)
     nodes = []
-    friends = get_friends_list(self.query, access_token)
+    friends = get_friends_list(node["id"], access_token)
     sleep(5 * User.find(self.user_id).active_twitter_threads)
     if friends
       friends.each do |friend|
         nodes << friend unless nodes.include?(friend)
-        edge = [main_user, friend]
+        edge = [node, friend]
         unless edges.include?(edge)
           edges << edge
         end
       end
     end
-    followers = get_followers_list(self.query, access_token)
+    followers = get_followers_list(node["id"], access_token)
     sleep(5 * User.find(self.user_id).active_twitter_threads)
     if followers
       followers.each do |follower|
