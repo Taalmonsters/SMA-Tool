@@ -64,14 +64,14 @@ class TwitterGraph < ActiveRecord::Base
     followers = nil
     # if set.size > 0
       # friends = get_mutual_friends_list(node["id"].to_s, set, access_token)
-      # sleep(30 * User.find(self.user_id).active_twitter_threads)
+      # sleep(30)
       # followers = get_mutual_followers_list(node["id"].to_s, set, access_token)
-      # sleep(30 * User.find(self.user_id).active_twitter_threads)
+      # sleep(30)
     # else
       friends = get_friends_list(node["id"].to_s, access_token)
-      sleep(30 * User.find(self.user_id).active_twitter_threads)
+      sleep(30)
       followers = get_followers_list(node["id"].to_s, access_token)
-      sleep(30 * User.find(self.user_id).active_twitter_threads)
+      sleep(30)
     # end
     if friends
       friends.each do |friend|
