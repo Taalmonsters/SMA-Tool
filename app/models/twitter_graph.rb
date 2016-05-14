@@ -35,15 +35,15 @@ class TwitterGraph < ActiveRecord::Base
         sleep(5 * User.find(self.user_id).active_twitter_threads)
         edges = []
         if main_user
-          nodes, edges = get_uid_data(main_user, edges, access_token)
+          nodes, edges = get_uid_data(main_user, edges, access_token, [])
           nodes.each do |node|
-            n, edges = get_uid_data(node, edges, access_token)
+            n, edges = get_uid_data(node, edges, access_token, nodes + [main_user])
           end
         end
         file = Rails.root.join("data", "twitter_graph_"+self.id.to_s+".csv")
         File.open(file, "w") do |f|
           edges.each do |edge|
-            f.write(edge[0]["screen_name"]+","+edge[1]["screen_name"])
+            f.write(edge[0]["screen_name"]+","+edge[1]["screen_name"]+"\n")
           end
         end
         self.update_attribute(:output, file)
@@ -56,16 +56,18 @@ class TwitterGraph < ActiveRecord::Base
     end
   end
   
-  def get_uid_data(node, edges, access_token)
+  def get_uid_data(node, edges, access_token, set)
     nodes = []
     friends = get_friends_list(node["id"].to_s, access_token)
     sleep(5 * User.find(self.user_id).active_twitter_threads)
     if friends
       friends.each do |friend|
-        nodes << friend unless nodes.include?(friend)
-        edge = [node, friend]
-        unless edges.include?(edge)
-          edges << edge
+        if set.size == 0 || set.include?(friend)
+          nodes << friend unless nodes.include?(friend)
+          edge = [node, friend]
+          unless edges.include?(edge)
+            edges << edge
+          end
         end
       end
     end
@@ -73,10 +75,12 @@ class TwitterGraph < ActiveRecord::Base
     sleep(5 * User.find(self.user_id).active_twitter_threads)
     if followers
       followers.each do |follower|
-        nodes << follower unless nodes.include?(follower)
-        edge = [follower, node]
-        unless edges.include?(edge)
-          edges << edge
+        if set.size == 0 || set.include?(follower)
+          nodes << follower unless nodes.include?(follower)
+          edge = [follower, node]
+          unless edges.include?(edge)
+            edges << edge
+          end
         end
       end
     end
