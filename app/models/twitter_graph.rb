@@ -58,7 +58,7 @@ class TwitterGraph < ActiveRecord::Base
   
   def get_uid_data(node, edges, access_token)
     nodes = []
-    friends = get_friends_list(node["id"], access_token)
+    friends = get_friends_list(node["id"].to_s, access_token)
     sleep(5 * User.find(self.user_id).active_twitter_threads)
     if friends
       friends.each do |friend|
@@ -69,7 +69,7 @@ class TwitterGraph < ActiveRecord::Base
         end
       end
     end
-    followers = get_followers_list(node["id"], access_token)
+    followers = get_followers_list(node["id"].to_s, access_token)
     sleep(5 * User.find(self.user_id).active_twitter_threads)
     if followers
       followers.each do |follower|
@@ -86,7 +86,7 @@ class TwitterGraph < ActiveRecord::Base
   def get_followers_list(uid, access_token)
     return nil if terminated
     key = get_key(uid)
-    url = "https://api.twitter.com/1.1/followers/list.json?"+key+"="+uid.to_s+"&skip_status=true&include_user_entities=false"
+    url = "https://api.twitter.com/1.1/followers/list.json?"+key+"="+uid+"&skip_status=true&include_user_entities=false"
     response = access_token.get(url)
     response = JSON.parse(response.body)
     return nil if response.has_key?("errors")
@@ -96,7 +96,7 @@ class TwitterGraph < ActiveRecord::Base
   def get_friends_list(uid, access_token)
     return nil if terminated
     key = get_key(uid)
-    url = "https://api.twitter.com/1.1/friends/list.json?"+key+"="+uid.to_s+"&skip_status=true&include_user_entities=false"
+    url = "https://api.twitter.com/1.1/friends/list.json?"+key+"="+uid+"&skip_status=true&include_user_entities=false"
     response = access_token.get(url)
     response = JSON.parse(response.body)
     return nil if response.has_key?("errors")
@@ -106,7 +106,7 @@ class TwitterGraph < ActiveRecord::Base
   def get_user(uid, access_token)
     return nil if terminated
     key = get_key(uid)
-    url = "https://api.twitter.com/1.1/users/show.json?"+key+"="+uid.to_s+"&include_entities=false"
+    url = "https://api.twitter.com/1.1/users/show.json?"+key+"="+uid+"&include_entities=false"
     response = access_token.get(url)
     response = JSON.parse(response.body)
     return nil if response.has_key?("errors")
@@ -114,11 +114,10 @@ class TwitterGraph < ActiveRecord::Base
   end
   
   def get_key(uid)
-    key = "screen_name"
     if uid =~ /^[0-9]+$/
-      key = "user_id"
+      return "user_id"
     end
-    return key
+    return "screen_name"
   end
   
   def prepare_access_token(consumer_key, consumer_secret, oauth_token, oauth_token_secret)
