@@ -22,6 +22,10 @@ class TwitterGraph < ActiveRecord::Base
     end
   end
   
+  def terminated
+    self.finished?
+  end
+  
   def get_graph
     self.update_attribute(:status, :running)
     Thread.new do
