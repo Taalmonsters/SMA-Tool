@@ -24,26 +24,33 @@ class TwitterGraph < ActiveRecord::Base
   
   def get_graph
     self.update_attribute(:status, :running)
-    tw_auth = TwitterAuth.where(:user_id => self.user_id).first
-    access_token = prepare_access_token(tw_auth.consumer_key, tw_auth.consumer_secret, tw_auth.access_token, tw_auth.access_secret)
-    main_user = get_user(self.query, access_token)
-    sleep(5 * User.find(self.user_id).active_twitter_threads)
-    edges = []
-    if main_user
-      nodes, edges = get_uid_data(uid, edges, access_token)
-      nodes.each do |node|
-        n, edges = get_uid_data(node["id"], edges, access_token)
+    Thread.new do
+      begin
+        tw_auth = TwitterAuth.where(:user_id => self.user_id).first
+        access_token = prepare_access_token(tw_auth.consumer_key, tw_auth.consumer_secret, tw_auth.access_token, tw_auth.access_secret)
+        main_user = get_user(self.query, access_token)
+        sleep(5 * User.find(self.user_id).active_twitter_threads)
+        edges = []
+        if main_user
+          nodes, edges = get_uid_data(uid, edges, access_token)
+          nodes.each do |node|
+            n, edges = get_uid_data(node["id"], edges, access_token)
+          end
+        end
+        file = Rails.root.join("data", "twitter_graph_"+self.id.to_s+".csv")
+        File.open(file, "w") do |f|
+          edges.each do |edge|
+            f.write(edge[0]["screen_name"]+","+edge[1]["screen_name"])
+          end
+        end
+        self.update_attribute(:output, file)
+        self.update_attribute(:status, :finished)
+      rescue => e
+        p e.message
+        p e.backtrace.join("\n")
+        self.update_attribute(:status, :finished)
       end
     end
-    file = Rails.root.join("data", "twitter_graph_"+self.id.to_s+".csv")
-    File.open(file, "w") do |f|
-      edges.each do |edge|
-        f.write(edge[0]["screen_name"]+","+edge[1]["screen_name"])
-      end
-    end
-    self.update_attribute(:output, file)
-    self.update_attribute(:status, :finished)
-    file
   end
   
   def get_uid_data(uid, edges, access_token)

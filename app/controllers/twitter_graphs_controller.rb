@@ -56,10 +56,10 @@ class TwitterGraphsController < ApplicationController
   # POST /twitter_graphs
   def create
     if @user && !@error
-      @twitter_search = TwitterGraph.new(twitter_graph_params)
+      @twitter_graph = TwitterGraph.new(twitter_graph_params)
       respond_to do |format|
         if @twitter_graph.save
-          @user.twitter_searches << @twitter_graph
+          @user.twitter_graphs << @twitter_graph
           @twitter_graph.get_graph
           format.html { redirect_to user_twitter_graph_url(:id => @twitter_graph.id), notice: 'Twitter graph was successfully created.' }
         else
@@ -77,7 +77,7 @@ class TwitterGraphsController < ApplicationController
   # PATCH/PUT /twitter_graphs/1
   def update
     respond_to do |format|
-      if @twitter_graph.update(twitter_search_params)
+      if @twitter_graph.update(twitter_graph_params)
         format.html { redirect_to @twitter_graph, notice: 'Twitter graph was successfully updated.' }
       else
         format.html { render :edit }
@@ -89,7 +89,7 @@ class TwitterGraphsController < ApplicationController
   def destroy
     @twitter_graph.destroy
     respond_to do |format|
-      format.html { redirect_to user_twitter_searches_url, notice: 'Twitter graph was successfully destroyed.' }
+      format.html { redirect_to user_twitter_graphs_url, notice: 'Twitter graph was successfully destroyed.' }
     end
   end
   
